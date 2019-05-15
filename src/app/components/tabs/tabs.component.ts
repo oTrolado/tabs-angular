@@ -11,22 +11,24 @@ export class TabsComponent implements OnInit {
   labels:any = [];
   contents:any;
   tabs:any = [];
-  atual:number = 0;
+  atual:number = 1;
 
   constructor() { }
 
   ngOnInit() {
     let elements = document.getElementsByClassName('trolado-tab-label');
     for(let i = 0; i < elements.length; i++){
+
       this.labels.push(elements[i].innerHTML);
+
     }
 
     this.contents = document.getElementsByClassName('trolado-tab-content');
     
     for(let i = 0; i < this.contents.length; i++){
-      this.tabs.push(this.contents[i].outerHTML);
-      this.contents[i].parentNode.removeChild(this.contents[i]);
-      i--;
+
+      this.contents[i].classList.add('hidden');
+
     }
 
     this.exibir(0);
@@ -34,12 +36,20 @@ export class TabsComponent implements OnInit {
 
   exibir(item){
     
-    for(let i = 0; i < this.contents.length; i++){
-      this.contents[i].parentNode.removeChild(this.contents[i]);
+    let wraper = document.getElementsByClassName('trolado-tabs-wraper')[0]
+    if(item >= this.atual){
+      //rodar para esquerda
+      this.contents[item].classList.remove('hidden');
+      wraper.classList.add('rotate-right');
+      setTimeout(() => {
+        wraper.classList.remove('rotate-right');
+        this.contents[this.atual].classList.add('hidden');
+      }, 1000);
+    } else {
+      //rodar para a direita
     }
-    let element = document.createElement('div');
-    element.innerHTML = this.tabs[item];
-    document.getElementsByClassName('trolado-tabs-content')[0].appendChild(element);
+    
+    
     this.atual = item;
   }
 }

@@ -1,3 +1,9 @@
+.hidden{
+    display: none!important;
+}
+
+/*HEADER */
+
 .trolado-tabs-header{
     display: flex;
     flex-direction: row;
@@ -9,14 +15,28 @@
     background-color: #FAFAFA;
 }
 
-.trolado-tab-label{
-    display: none;
-}
-
 .trolado-tab-label-item{
     padding: 10px;
     cursor: pointer;
 }
+
+
+/*CORPO */
+
+.trolado-tabs-content{
+    
+    overflow-x: hidden;
+    width: 100px;
+    
+}
+
+.trolado-tabs-wraper{
+    position: relative;
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+}
+
 
 .trolado-tab-label-item:hover{
     background-color: #FAFAFA;
@@ -24,4 +44,13 @@
 
 .hidden{
     display: none;
+}
+
+.rotate-right{
+    animation: esquerda 1s 1 ease;
+}
+
+@keyframes esquerda {
+    from {left:0}
+    to {left: -100px;}
 }
