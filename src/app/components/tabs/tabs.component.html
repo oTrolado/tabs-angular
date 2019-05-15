@@ -1,0 +1,8 @@
+<div class="trolado-tabs">
+    <div class="trolado-tabs-header">
+        <div class="trolado-tab-label-item" *ngFor="let label of labels; let i = index" (click)="exibir(i)">{{ label }}</div>
+    </div>
+    <div class="trolado-tabs-content">
+        <ng-content selector=".trolado-tab-content"></ng-content>
+    </div>
+</div>
