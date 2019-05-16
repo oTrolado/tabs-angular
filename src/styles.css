@@ -43,9 +43,31 @@
     display: flex;
     flex-direction: row;
     transition: transform 1s ease;
+    width: 200%;
 }
 
 
 .trolado-tab{
-    width: 300%;
+    width: 48%;
+    padding: 1%;
+}
+
+
+.toRight{
+    animation: toright 1s ease;
+}
+
+@keyframes toright {
+    from{left: 0;}
+    to{left: -100%;}
+}
+
+
+.toLeft{
+    animation: toleft 1s ease;
+}
+
+@keyframes toleft {
+    from{left: -100%;}
+    to{left: 0;}
 }

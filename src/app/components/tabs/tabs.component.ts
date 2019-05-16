@@ -11,9 +11,9 @@ export class TabsComponent implements OnInit {
   labels:any = [];
   contents:any;
   tabs:any = [];
-  atual:number = null;
+  atual:number = 0;
   wraper:any;
-
+  animable: boolean = true;
 
   constructor() { }
 
@@ -26,17 +26,43 @@ export class TabsComponent implements OnInit {
 
     }
 
-    this.contents = document.getElementsByClassName('trolado-tab-content');
+    this.contents = document.getElementsByClassName('trolado-tab');
+    for(let i = 1; i < this.contents.length; i++){
+      this.contents[i].classList.add('hidden');
+    }
     
     this.wraper = document.getElementsByClassName('trolado-tabs-wraper')[0];
-    this.wraper.style.width =  this.labels.length+'00%';
+    
     
   }
 
   exibir(item){
+
+    if(item == this.atual || !this.animable) return;
     
-    let percent = (item/this.labels.length)*100
-    this.wraper.style.transform = 'translateX(-'+percent+'%)';
+    this.animable = false;    
+
+    if(item > this.atual){
+
+      this.wraper.classList.add('toRight');
+
+      this.contents[item].classList.remove('hidden');
+  
+    } else {
+      
+      this.wraper.classList.add('toLeft')
+      
+      this.contents[item].classList.remove('hidden');
+
+    } 
+
+    setTimeout(()=>{//RESET
+      this.contents[this.atual].classList.add('hidden');
+      this.wraper.classList.remove('toLeft', 'toRight');
+      this.atual = item;
+      this.animable = true;
+    },1000);
+   
   }
 }
  
