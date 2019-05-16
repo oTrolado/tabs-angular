@@ -4,7 +4,7 @@ import { element } from '@angular/core/src/render3';
 @Component({
   selector: 'trolado-tabs',
   templateUrl: './tabs.component.html',
-  styleUrls: ['./tabs.component.css']
+  styleUrls: ['./tabs.component.scss']
 })
 export class TabsComponent implements OnInit {
 
@@ -36,6 +36,8 @@ export class TabsComponent implements OnInit {
     
     this.indicator = document.getElementsByClassName('trolado-tabs-indicator')[0];
     this.indicator.style.width = (100/this.labels.length)+'%';
+    setTimeout(()=> document.getElementsByClassName('trolado-tab-label-item')[0].classList.add('active-label'), 500);
+
   }
 
   exibir(item){
@@ -45,6 +47,9 @@ export class TabsComponent implements OnInit {
     this.animable = false;    
 
     this.indicator.style.transform = 'translateX('+item*100+'%)';
+
+    document.getElementsByClassName('trolado-tab-label-item')[this.atual].classList.remove('active-label');
+    document.getElementsByClassName('trolado-tab-label-item')[item].classList.add('active-label');
 
     if(item > this.atual){
 
@@ -67,6 +72,22 @@ export class TabsComponent implements OnInit {
       this.animable = true;
     },500);
    
+  }
+
+  ripple(event, element){
+    let elements = document.getElementsByClassName('trolado-tab-label-item');
+
+    let div = document.createElement('div');
+    div.classList.add('ripple');
+    elements[element].appendChild(div);
+
+    div.style.top = (event.layerY)+"px";
+    div.style.left = (event.layerX)+"px";
+    div.style.transform = 'scale('+(event.target.clientWidth*2.2)/12+')';
+    console.log(div);
+    console.log(event);
+    setTimeout(()=>div.style.backgroundColor = 'transparent', 400);
+    setTimeout(()=>div.remove(), 800);
   }
 }
  
