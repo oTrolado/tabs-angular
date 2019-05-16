@@ -14,6 +14,7 @@ export class TabsComponent implements OnInit {
   atual:number = 0;
   wraper:any;
   animable: boolean = true;
+  indicator:any;
 
   constructor() { }
 
@@ -33,7 +34,8 @@ export class TabsComponent implements OnInit {
     
     this.wraper = document.getElementsByClassName('trolado-tabs-wraper')[0];
     
-    
+    this.indicator = document.getElementsByClassName('trolado-tabs-indicator')[0];
+    this.indicator.style.width = (100/this.labels.length)+'%';
   }
 
   exibir(item){
@@ -41,6 +43,8 @@ export class TabsComponent implements OnInit {
     if(item == this.atual || !this.animable) return;
     
     this.animable = false;    
+
+    this.indicator.style.transform = 'translateX('+item*100+'%)';
 
     if(item > this.atual){
 
@@ -61,7 +65,7 @@ export class TabsComponent implements OnInit {
       this.wraper.classList.remove('toLeft', 'toRight');
       this.atual = item;
       this.animable = true;
-    },1000);
+    },500);
    
   }
 }

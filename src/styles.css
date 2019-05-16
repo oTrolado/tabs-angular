@@ -9,6 +9,11 @@
 
 .trolado-tabs-header{
     display: flex;
+    flex-direction: column;
+}
+
+.trolado-tabs-header-labels{
+    display: flex;
     flex-direction: row;
 }
 
@@ -28,6 +33,21 @@
     background-color: rgba(189, 189, 189, 0.212);
 }
 
+/*Indicator*/
+.trolado-tabs-indicator-container{
+    height: 1px;
+    background-color: grey;
+    position: relative;
+}
+
+.trolado-tabs-indicator{
+    height: 2px;
+    background-color: rgb(0, 183, 255);
+    position: absolute;
+    top: -1px;
+    transition: .5s transform cubic-bezier(0.4, 0, 0.2, 1);;
+}
+
 
 /*Tabs*/
 
@@ -42,7 +62,6 @@
     position: relative;
     display: flex;
     flex-direction: row;
-    transition: transform 1s ease;
     width: 200%;
 }
 
@@ -53,8 +72,9 @@
 }
 
 
+/*Animations*/
 .toRight{
-    animation: toright 1s ease;
+    animation: toright .5s cubic-bezier(0.4, 0, 0.2, 1);;
 }
 
 @keyframes toright {
@@ -64,7 +84,7 @@
 
 
 .toLeft{
-    animation: toleft 1s ease;
+    animation: toleft .5s cubic-bezier(0.4, 0, 0.2, 1);;
 }
 
 @keyframes toleft {

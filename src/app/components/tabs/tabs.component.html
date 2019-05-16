@@ -1,6 +1,11 @@
 <div class="trolado-tabs">
     <div class="trolado-tabs-header">
-        <div class="trolado-tab-label-item" *ngFor="let label of labels; let i = index" (click)="exibir(i)"><strong>{{ label }}</strong></div>
+        <div class="trolado-tabs-header-labels">
+            <div class="trolado-tab-label-item" *ngFor="let label of labels; let i = index" (click)="exibir(i)"><strong>{{ label }}</strong></div>
+        </div>
+        <div class="trolado-tabs-indicator-container">
+            <div class="trolado-tabs-indicator"></div>
+        </div>
     </div>
     <div class="trolado-tabs-content">
         <div class="trolado-tabs-wraper">
