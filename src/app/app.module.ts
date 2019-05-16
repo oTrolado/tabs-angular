@@ -3,14 +3,12 @@ import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { TabsComponent } from './components/tabs/tabs.component';
-import { TabComponent } from './components/tabs/tab/tab.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    TabsComponent,
-    TabComponent,
+    TabsComponent
   ],
   imports: [
     BrowserModule

@@ -11,11 +11,14 @@ export class TabsComponent implements OnInit {
   labels:any = [];
   contents:any;
   tabs:any = [];
-  atual:number = 1;
+  atual:number = null;
+  wraper:any;
+
 
   constructor() { }
 
   ngOnInit() {
+
     let elements = document.getElementsByClassName('trolado-tab-label');
     for(let i = 0; i < elements.length; i++){
 
@@ -25,32 +28,15 @@ export class TabsComponent implements OnInit {
 
     this.contents = document.getElementsByClassName('trolado-tab-content');
     
-    for(let i = 0; i < this.contents.length; i++){
-
-      this.contents[i].classList.add('hidden');
-
-    }
-
-    this.exibir(0);
+    this.wraper = document.getElementsByClassName('trolado-tabs-wraper')[0];
+    this.wraper.style.width =  this.labels.length+'00%';
+    
   }
 
   exibir(item){
     
-    let wraper = document.getElementsByClassName('trolado-tabs-wraper')[0]
-    if(item >= this.atual){
-      //rodar para esquerda
-      this.contents[item].classList.remove('hidden');
-      wraper.classList.add('rotate-right');
-      setTimeout(() => {
-        wraper.classList.remove('rotate-right');
-        this.contents[this.atual].classList.add('hidden');
-      }, 1000);
-    } else {
-      //rodar para a direita
-    }
-    
-    
-    this.atual = item;
+    let percent = (item/this.labels.length)*100
+    this.wraper.style.transform = 'translateX(-'+percent+'%)';
   }
 }
  

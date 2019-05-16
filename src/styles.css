@@ -1,4 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
+
+
+.hidden{
+    display: none!important;
+}
+
+/*Label*/
+
+.trolado-tabs-header{
+    display: flex;
+    flex-direction: row;
+}
+
 .trolado-tab-label{
     display: none;
 }
@@ -6,12 +19,33 @@
 .trolado-tab-label-item{
     padding: 10px;
     cursor: pointer;
+    width: 100%;
+    text-align: center;
+    
 }
 
 .trolado-tab-label-item:hover{
-    background-color: #FAFAFA;
+    background-color: rgba(189, 189, 189, 0.212);
 }
 
-.hidden{
-    display: none;
+
+/*Tabs*/
+
+.trolado-tabs-content{
+    
+    overflow-x: hidden;
+    width: 100%;
+    
+}
+
+.trolado-tabs-wraper{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    transition: transform 1s ease;
+}
+
+
+.trolado-tab{
+    width: 300%;
 }
