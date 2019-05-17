@@ -159,14 +159,14 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
     } else {
       console.log(headerWidth - containerWidth + " " + positionLeft);
-      if(positionLeft < 0){
+      if(positionLeft < -60){
        
         this.header.nativeElement.style.left = positionLeft + 60+'px';
       
-      } else if( positionLeft == 0){
-
-        this.header.nativeElement.style.left = positionLeft + 10+'px';
-
+      } else {
+        console.log(positionLeft);
+        this.header.nativeElement.style.left = -1*(positionLeft - 10) + 'px';
+      
       }
       
     }
