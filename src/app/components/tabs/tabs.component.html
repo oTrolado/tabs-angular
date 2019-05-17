@@ -1,4 +1,4 @@
-<div class="trolado-tabs" (window:resize)="onResize($event)">
+<div class="trolado-tabs" (window:resize)="onResize($event)" (window:load)="onResize($event)">
     <div class="trolado-tabs-header" #headerContainer>
 
         <div class="trolado-tabs-arrow trolado-tabs-arrow-left" *ngIf="arrows" (click)="navigate('left')">

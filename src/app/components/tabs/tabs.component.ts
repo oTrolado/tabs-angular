@@ -15,7 +15,7 @@ export class TabsComponent implements OnInit, AfterViewInit {
   wraper:any;
   animable: boolean = true;
   indicator:any;
-  arrows:boolean = true;
+  arrows:boolean = false;
 
   @ViewChild("header") header: ElementRef;
   @ViewChild("headerContainer") headerContainer: ElementRef;
@@ -39,7 +39,6 @@ export class TabsComponent implements OnInit, AfterViewInit {
     this.wraper = document.getElementsByClassName('trolado-tabs-wraper')[0];
     
     this.indicator = document.getElementsByClassName('trolado-tabs-indicator')[0];
-    
 
     this.indicator.style.width = (100/this.labels.length)+'%';
 
@@ -50,22 +49,28 @@ export class TabsComponent implements OnInit, AfterViewInit {
     
     document.getElementsByClassName('trolado-tab-label-item')[0].classList.add('active-label');
 
+    this.header.nativeElement.style.left = 0;
+    this.header.nativeElement.style.right = 0;
 
     this.header.nativeElement.style.minWidth = this.labels.length * 75 + 'px';
+
+    
     
   }
 
   onResize(event){
     let container = this.headerContainer.nativeElement.clientWidth;
     let element = this.header.nativeElement.clientWidth;
-    console.log(container+ ' ' +element);
+
+    this.header.nativeElement.style.left = '0';
+
     if(container < element){
       this.arrows = true;
       return true;
     } 
     
     this.arrows = false;
-    this.header.nativeElement.style.left = '0';
+    
     return false;
 
   }
@@ -135,15 +140,35 @@ export class TabsComponent implements OnInit, AfterViewInit {
   }
 
   navigate(direction){
-    let position = parseInt(this.header.nativeElement.style.left + 1);
+    let positionLeft = parseInt(this.header.nativeElement.style.left);
+    let headerWidth = parseInt(this.header.nativeElement.clientWidth);
+    let containerWidth = parseInt(this.headerContainer.nativeElement.clientWidth);
 
     if(direction == 'right'){
 
-      this.header.nativeElement.style.left = position - 60+'px';
+      console.log(headerWidth - containerWidth + " " + positionLeft);
+      if((containerWidth - headerWidth) < positionLeft - 60){
+        
+        this.header.nativeElement.style.left = positionLeft - 60+'px';
+      
+      } else {
+
+        this.header.nativeElement.style.left = positionLeft + (containerWidth - headerWidth - positionLeft) - 10 + 'px';
+      }
+      
 
     } else {
+      console.log(headerWidth - containerWidth + " " + positionLeft);
+      if(positionLeft < 0){
+       
+        this.header.nativeElement.style.left = positionLeft + 60+'px';
+      
+      } else if( positionLeft == 0){
 
-      this.header.nativeElement.style.left = position + 60+'px';
+        this.header.nativeElement.style.left = positionLeft + 10+'px';
+
+      }
+      
     }
   }
 }
