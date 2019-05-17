@@ -1,5 +1,4 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
-import { query } from '@angular/core/src/render3';
 
 @Component({
   selector: 'trolado-tabs',
@@ -7,54 +6,79 @@ import { query } from '@angular/core/src/render3';
   styleUrls: ['./tabs.component.scss']
 })
 export class TabsComponent implements OnInit, AfterViewInit {
+  //CONTROLES DE ESTADO
+  atual:number = 0;
+  arrows:boolean = false;
+  animable: boolean = true;
 
+  //HEADER
   labels:any = [];
+  labelItem:any;
+  indicator:any;
+
+  //CONTEUDO
   contents:any;
   tabs:any = [];
-  atual:number = 0;
   wraper:any;
-  animable: boolean = true;
-  indicator:any;
-  arrows:boolean = false;
+  
+  
+  
 
   @ViewChild("header") header: ElementRef;
   @ViewChild("headerContainer") headerContainer: ElementRef;
+  
 
-  constructor() { }
+  constructor(
+    private view:ElementRef
+  ) { }
 
   ngOnInit() {
+    
+    let elements = this.view.nativeElement.querySelectorAll('.trolado-tab-label');
 
-    let elements = document.getElementsByClassName('trolado-tab-label');
     for(let i = 0; i < elements.length; i++){
 
       this.labels.push(elements[i].innerHTML);
 
     }
 
-    this.contents = document.getElementsByClassName('trolado-tab');
+    this.contents = this.view.nativeElement.querySelectorAll('.trolado-tab');
     for(let i = 1; i < this.contents.length; i++){
       this.contents[i].classList.add('hidden');
     }
     
-    this.wraper = document.getElementsByClassName('trolado-tabs-wraper')[0];
+    this.wraper = this.view.nativeElement.querySelector('.trolado-tabs-wraper');
     
-    this.indicator = document.getElementsByClassName('trolado-tabs-indicator')[0];
+    this.indicator = this.view.nativeElement.querySelector('.trolado-tabs-indicator');
 
     this.indicator.style.width = (100/this.labels.length)+'%';
-
+    
+    
   }
 
 
   ngAfterViewInit(){
+
+    this.labelItem = this.view.nativeElement.querySelectorAll('.trolado-tab-label-item');
+    let width:number = 0;
     
-    document.getElementsByClassName('trolado-tab-label-item')[0].classList.add('active-label');
+    this.labelItem[0].classList.add('active-label');
+
+    for(let i = 0; i < this.labelItem.length; i++){
+
+      width += this.labelItem[i].clientWidth;
+
+    }
+
+    //console.log(this.view.nativeElement.querySelectorAll('.trolado-tab-label-item')[i].clientWidth);
 
     this.header.nativeElement.style.left = 0;
+
     this.header.nativeElement.style.right = 0;
 
-    this.header.nativeElement.style.minWidth = this.labels.length * 75 + 'px';
+    this.header.nativeElement.style.minWidth = width + 'px';
 
-    
+    this.indicator.style.width = this.labelItem[0].clientWidth+'px';
     
   }
 
@@ -68,6 +92,8 @@ export class TabsComponent implements OnInit, AfterViewInit {
       this.arrows = true;
       return true;
     } 
+
+
     
     this.arrows = false;
     
@@ -76,16 +102,20 @@ export class TabsComponent implements OnInit, AfterViewInit {
   }
 
 
-  exibir(item){
+  exibir(item, event){//EXECUTA TRANSIÇÃO DA TAB
 
     if(item == this.atual || !this.animable) return;
     
     this.animable = false;    
 
-    this.indicator.style.transform = 'translateX('+item*100+'%)';
+    this.indicator.style.width = this.labelItem[item].clientWidth+'px';
+    
+    let translateWidth:number = this.labelItem[item].offsetLeft;
 
-    document.getElementsByClassName('trolado-tab-label-item')[this.atual].classList.remove('active-label');
-    document.getElementsByClassName('trolado-tab-label-item')[item].classList.add('active-label');
+    this.indicator.style.transform = 'translateX('+translateWidth+'px)';
+
+    this.view.nativeElement.querySelectorAll('.trolado-tab-label-item')[this.atual].classList.remove('active-label');
+    this.view.nativeElement.querySelectorAll('.trolado-tab-label-item')[item].classList.add('active-label');
 
     if(item > this.atual){
 
@@ -107,6 +137,20 @@ export class TabsComponent implements OnInit, AfterViewInit {
       this.atual = item;
       this.animable = true;
     },500);
+
+    if( this.arrows ){//SE HOUVER ARROWS CHAMA O NAVIGATE
+
+      let clientX = event.clientX;
+      let headerX = this.headerContainer.nativeElement;
+
+      
+      if(clientX - headerX.offsetLeft < 100){
+        this.navigate('left');
+      } else if(clientX + headerX.offsetLeft > headerX.clientWidth - 100){
+        this.navigate('right');
+      }
+
+    }
    
   }
 
@@ -114,7 +158,7 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
 
   ripple(event, element){
-    let elements = document.getElementsByClassName('trolado-tab-label-item');
+    let elements = this.view.nativeElement.querySelectorAll('.trolado-tab-label-item');
 
     let div = document.createElement('div');
     div.classList.add('ripple');
@@ -126,10 +170,10 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
     if(event.target.clientWidth >= event.target.clientHeight){
       
-      div.style.transform = 'scale('+(event.target.clientWidth*2.2)/12+')';
+      div.style.transform = 'scale('+(event.target.clientWidth*2.8)/12+')';
     
     } else {
-      console.log(event);
+      
       div.style.transform = 'scale('+(event.target.clientHeight*2.8)/12+')';
 
     }
@@ -139,17 +183,16 @@ export class TabsComponent implements OnInit, AfterViewInit {
     setTimeout(()=>div.remove(), 800);
   }
 
-  navigate(direction){
+  navigate(direction){//NAVEGAÇÃO DO HEADER
     let positionLeft = parseInt(this.header.nativeElement.style.left);
     let headerWidth = parseInt(this.header.nativeElement.clientWidth);
     let containerWidth = parseInt(this.headerContainer.nativeElement.clientWidth);
 
     if(direction == 'right'){
 
-      console.log(headerWidth - containerWidth + " " + positionLeft);
-      if((containerWidth - headerWidth) < positionLeft - 60){
+      if((containerWidth - headerWidth) < positionLeft - 80){
         
-        this.header.nativeElement.style.left = positionLeft - 60+'px';
+        this.header.nativeElement.style.left = positionLeft - 80+'px';
       
       } else {
 
@@ -158,12 +201,13 @@ export class TabsComponent implements OnInit, AfterViewInit {
       
 
     } else {
-      console.log(headerWidth - containerWidth + " " + positionLeft);
-      if(positionLeft <= -60){
+      
+      if(positionLeft <= -80){
        
-        this.header.nativeElement.style.left = positionLeft + 60+'px';
+        this.header.nativeElement.style.left = positionLeft + 80+'px';
       
       } else {
+
         this.header.nativeElement.style.left = positionLeft + (-1*(positionLeft)+ 10) + 'px';
       
       }

@@ -10,7 +10,7 @@ $hover-color:(rgba($secondary-color,0.2));
     display: none!important;
 }
 
-/*Label*/
+/*Label--------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 .trolado-tabs-header{
     display: flex;
@@ -33,7 +33,7 @@ $hover-color:(rgba($secondary-color,0.2));
 }
 
 .trolado-tabs-arrow:hover{
-    box-shadow: 0px 0px 10px 1px #E0E0E0;
+    box-shadow: 0px 0px 10px 5px #E0E0E0;
     color: $secondary-color;
 }
 
@@ -56,7 +56,7 @@ $hover-color:(rgba($secondary-color,0.2));
 }
 
 .trolado-tabs-header-labels{
-    display: flex;
+    display: inline-flex;
     flex-direction: row;
 }
 
@@ -65,13 +65,15 @@ $hover-color:(rgba($secondary-color,0.2));
 }
 
 .trolado-tab-label-item{
-    padding: 10px;
+    padding: 10px 24px;
     cursor: pointer;
-    width: 100%;
+    /*width: 100%;*/
     text-align: center;
     color: rgb(151, 151, 151);
     position: relative;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
 }
 
 
@@ -79,8 +81,12 @@ $hover-color:(rgba($secondary-color,0.2));
     color: black;
 }
 
+.trolado-tab-label-item strong{
+    align-self: center;
+}
 
-/*Ripple*/
+
+/*Ripple---------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #clickArea{
     position: absolute;
@@ -92,7 +98,7 @@ $hover-color:(rgba($secondary-color,0.2));
 }   
 
 .ripple{
-    background-color: rgba(99, 99, 99, 0.1);
+    background-color: rgba(99, 99, 99, 0.199);
     position: absolute;  
     z-index: 1;
     transform-origin: 50% 50%;
@@ -138,12 +144,11 @@ $hover-color:(rgba($secondary-color,0.2));
 
 
 .trolado-tab{
-    width: 48%;
-    padding: 1%;
+    width: 50%;
 }
 
 
-/*Animations*/
+/*Animations---------------------------------------------------------------------------------------------------------------------------------------------------------*/
 .toRight{
     animation: toright .5s cubic-bezier(0.4, 0, 0.2, 1);
 }
