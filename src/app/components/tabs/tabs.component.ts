@@ -11,6 +11,8 @@ export class TabsComponent implements OnInit, AfterViewInit {
   arrows:boolean = false;
   animable: boolean = true;
   @Input() tabAlign:String;
+  @Input() scalable:string;
+  plus:boolean = false;
 
   //HEADER
   labels:any = [];
@@ -27,15 +29,21 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
   @ViewChild("header") header: ElementRef;
   @ViewChild("headerContainer") headerContainer: ElementRef;
+  @ViewChild("plusLabel") plusLabel: ElementRef;
+  @ViewChild("plusBody") plusBody: ElementRef;
   
 
   constructor(
     private view:ElementRef
   ) { }
 
+
+
   ngOnInit() {
     
     let elements = this.view.nativeElement.querySelectorAll('.trolado-tab-label');
+
+    if(this.scalable == 'true') this.plus = true;
 
     for(let i = 0; i < elements.length; i++){
 
@@ -51,11 +59,9 @@ export class TabsComponent implements OnInit, AfterViewInit {
     this.wraper = this.view.nativeElement.querySelector('.trolado-tabs-wraper');
     
     this.indicator = this.view.nativeElement.querySelector('.trolado-tabs-indicator');
-
-    this.indicator.style.width = (100/this.labels.length)+'%';
-    
     
   }
+
 
 
   ngAfterViewInit(){
@@ -92,11 +98,14 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
     }
 
-    this.exibir(0, null)
+    this.exibir(0, null);
     
   }
 
-  onResize(event){
+
+
+
+  onResize(event){//Organiza a "casa" quando a "familia" muda de tamanho
     let container = this.headerContainer.nativeElement.clientWidth;
     let element = this.header.nativeElement.clientWidth;
 
@@ -109,11 +118,21 @@ export class TabsComponent implements OnInit, AfterViewInit {
     
     this.arrows = false;
 
-    this.indicatorTransform(this.labelItem[this.atual], this.atual);
-    
+    if(this.labelItem[this.atual]){
+
+      this.indicatorTransform(this.labelItem[this.atual], this.labelItem[this.atual].clientWidth);  
+
+    } else if(this.atual <= this.labels.length) {
+
+      this.indicatorTransform(0, this.labelItem[0].clientWidth);
+
+    }
+        
     return false;
 
   }
+
+
 
 
   exibir(item, event){//EXECUTA TRANSIÇÃO DA TAB
@@ -122,16 +141,12 @@ export class TabsComponent implements OnInit, AfterViewInit {
     
     this.animable = false;  
 
-    let labelItem:any  = this.view.nativeElement.querySelectorAll('.trolado-tab-label-item');
+    if(this.labelItem[this.atual]){
 
-
-    if(labelItem[this.atual]){
-
-      labelItem[this.atual].classList.remove('active-label');
+      this.labelItem[this.atual].classList.remove('active-label');
     
     }
-    labelItem[item].classList.add('active-label');
-
+    this.labelItem[item].classList.add('active-label');
 
     this.contents[item].classList.remove('hidden');
 
@@ -145,18 +160,20 @@ export class TabsComponent implements OnInit, AfterViewInit {
       
     } 
 
-    this.indicatorTransform(this.labelItem[item].offsetLeft, item);
+    this.indicatorTransform(this.labelItem[item].offsetLeft, this.labelItem[item].clientWidth);
 
 
-    setTimeout(()=>{//RESET
-      if(this.contents[this.atual]){
+    setTimeout(()=>{//RESET ---------------------------
+      if(this.atual > this.labels.length ){
+        this.plusBody.nativeElement.classList.add('hidden');
+      } else if(this.atual != null) {
         this.contents[this.atual].classList.add('hidden');
       }
-      this.indicatorTransform(this.labelItem[item].offsetLeft, item);
+      this.indicatorTransform(this.labelItem[item].offsetLeft, this.labelItem[item].clientWidth);
       this.wraper.classList.remove('toLeft', 'toRight');
       this.atual = item;
       this.animable = true;
-    },500);
+    },400);
 
     if( this.arrows ){//SE HOUVER ARROWS CHAMA O NAVIGATE
 
@@ -174,31 +191,114 @@ export class TabsComponent implements OnInit, AfterViewInit {
    
   }
 
-  indicatorTransform(width, item){
 
-    this.indicator.style.width = this.labelItem[item].clientWidth+'px';
-    this.indicator.style.transform = 'translateX('+width+'px)';
+  
+
+
+  criarTAB(event){//CRIA UM NOVA TAB
+    setTimeout(()=> {
+      this.plusLabel.nativeElement.querySelector('input').focus();
+    }, 500);
+
+
+    if(this.atual > this.labels.length ||
+      !this.animable) return false;
+
+    this.animable = false;
+
+    if(this.labelItem[this.atual]){
+
+      this.labelItem[this.atual].classList.remove('active-label');
+    
+    }
+    this.navigate('right');
+    this.navigate('right');
+    
+    this.plusLabel.nativeElement.innerHTML = "<input class='label-input' placeholder='Title'>";
+
+    
+
+    this.plusBody.nativeElement.classList.remove('hidden');
+
+    this.wraper.classList.add('toRight');
+
+    this.indicatorTransform(event.path[1].offsetLeft, event.path[1].clientWidth);
+
+    setTimeout(()=>{//RESET
+      if(this.atual == null){
+
+        this.contents[0].classList.add('hidden');
+      
+      } else {
+        this.contents[this.atual].classList.add('hidden');
+      }
+      this.wraper.classList.remove('toLeft', 'toRight');
+      this.animable = true;
+      this.atual = this.labels.length + 1;
+    },500);
+  }
+
+
+
+
+  abortTAB(){
+
+    this.plusLabel.nativeElement.innerHTML = '<i class="fas fa-plus"></i>';
 
   }
 
 
-  ripple(event, element){
-    let elements = this.view.nativeElement.querySelectorAll('.trolado-tab-label-item');
+
+
+  indicatorTransform(translate, width){
+
+    this.indicator.style.width = width+'px';
+    this.indicator.style.transform = 'translateX('+translate+'px)';
+
+  }
+
+
+
+
+  ripple(event){
+
+   let element;
+
+    event.path.map((item, index) => {//MAPEIA O ELEMENTO A SER ANIMADO
+      if(item.classList != null){
+        if(item.classList.contains('clickArea')){
+
+          element = event.path[index+1];
+
+        }
+      }
+    });
 
     let div = document.createElement('div');
     div.classList.add('ripple');
 
-    elements[element].appendChild(div);
+    element.appendChild(div);
 
     div.style.top = (event.layerY)+"px";
     
     div.style.left = (event.layerX)+"px";
-      
-    div.style.transform = 'scale('+(event.target.clientWidth*2.2)/12+')';
 
-    setTimeout(()=>div.style.backgroundColor = 'transparent', 400);
+    if(event.target.clientWidth >= event.target.clientHeight){	
+
+      div.style.transform = 'scale('+(event.target.clientWidth*2.8)/12+')';	
+
+    } else {
+
+      div.style.transform = 'scale('+(event.target.clientHeight*2.8)/12+')';
+
+    }
+      
+    setTimeout(()=>div.style.backgroundColor = 'transparent', 400);//RESET
     setTimeout(()=>div.remove(), 800);
+
   }
+
+
 
 
   navigate(direction){//NAVEGAÇÃO DO HEADER
@@ -214,7 +314,7 @@ export class TabsComponent implements OnInit, AfterViewInit {
       
       } else {
 
-        this.header.nativeElement.style.left = positionLeft + (containerWidth - headerWidth - positionLeft) - 10 + 'px';
+        this.header.nativeElement.style.left = positionLeft + (containerWidth - headerWidth - positionLeft) - 19 + 'px';
       }
       
 
@@ -226,7 +326,7 @@ export class TabsComponent implements OnInit, AfterViewInit {
       
       } else {
 
-        this.header.nativeElement.style.left = positionLeft + (-1*(positionLeft)+ 10) + 'px';
+        this.header.nativeElement.style.left = positionLeft + (-1*(positionLeft)+ 19) + 'px';
       
       }
       

@@ -30,6 +30,7 @@ $hover-color:(rgba($primary-color,0.2));
     box-shadow: 0px 0px 5px 1px #E0E0E0;
     cursor: pointer;
     transition: .5s;
+    overflow: hidden;
 }
 
 .trolado-tabs-arrow:hover{
@@ -89,7 +90,7 @@ $hover-color:(rgba($primary-color,0.2));
 
 /*Ripple---------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-#clickArea{
+.clickArea{
     position: absolute;
     height: 100%;
     width: 100%;
@@ -148,7 +149,38 @@ $hover-color:(rgba($primary-color,0.2));
     width: 50%;
 }
 
+/*Plus--------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+.label-input{
+    width: 90px;
+    border: none;
+}
+
+.plus-body{
+    position: relative;
+    text-align: center;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.button{
+    width: 100px;
+    height: 36px;
+    margin: 10px 0 0 auto;
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.plus-body button{
+    height: 100%;
+    width: 100%;
+    border: none;
+    color: white;
+    background-color: $primary-color;
+    cursor: pointer;
+}
 /*Animations---------------------------------------------------------------------------------------------------------------------------------------------------------*/
 .toRight{
     animation: toright .5s cubic-bezier(0.4, 0, 0.2, 1);

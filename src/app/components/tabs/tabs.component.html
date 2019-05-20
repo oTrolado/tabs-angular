@@ -2,18 +2,26 @@
     <div class="trolado-tabs-header" #headerContainer>
 
         <div class="trolado-tabs-arrow trolado-tabs-arrow-left" *ngIf="arrows" (click)="navigate('left')">
+                <div class="clickArea" (click)="ripple($event)"></div>
                 <i class="fas fa-chevron-left"></i>
         </div>
         <div class="trolado-tabs-arrow trolado-tabs-arrow-right" *ngIf="arrows" (click)="navigate('right')">
+                <div class="clickArea" (click)="ripple($event)"></div>
                 <i class="fas fa-chevron-right"></i>
         </div>
         
         <div class="trolado-tabs-header-wraper" #header>
             <div class="trolado-tabs-header-labels" >
                 <div class="trolado-tab-label-item" *ngFor="let label of labels; let i = index" (click)="exibir(i,$event);">
-                    <div id="clickArea" (click)="ripple($event, i)"></div>
+                    <div class="clickArea" (click)="ripple($event)"></div>
                     <strong>{{ label }}</strong>
                 </div>
+
+                <div class="trolado-tab-label-item" *ngIf="plus" (click)="criarTAB($event);">
+                    <div class="clickArea" (click)="ripple($event)"></div>
+                    <strong #plusLabel><i class="fas fa-plus"></i></strong>
+                </div>
+
             </div>
             <div class="trolado-tabs-indicator-container">
                 <div class="trolado-tabs-indicator"></div>
@@ -23,6 +31,18 @@
     <div class="trolado-tabs-content">
         <div class="trolado-tabs-wraper">
             <ng-content selector=".trolado-tab-content"></ng-content>
+            <ng-container *ngIf="plus">
+                <div class="plus-body hidden" #plusBody>
+                    <h3>Novo Conteudo</h3>
+                    <textarea name="new_content" id="nw_ct" rows="30"></textarea>
+                    <div class="button">
+                        <button>
+                            <div class="clickArea" (click)="ripple($event)"></div>
+                            Salvar
+                        </button>
+                    </div>
+                </div>
+            </ng-container>
         </div>
     </div>
 </div>
