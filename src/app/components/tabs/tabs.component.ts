@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, Input } from '@angular/core';
 
 @Component({
   selector: 'trolado-tabs',
@@ -7,9 +7,10 @@ import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angula
 })
 export class TabsComponent implements OnInit, AfterViewInit {
   //CONTROLES DE ESTADO
-  atual:number = 0;
+  atual:number = null;
   arrows:boolean = false;
   animable: boolean = true;
+  @Input() tabAlign:String;
 
   //HEADER
   labels:any = [];
@@ -61,7 +62,8 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
     this.labelItem = this.view.nativeElement.querySelectorAll('.trolado-tab-label-item');
     let width:number = 0;
-    
+    let labels = this.view.nativeElement.querySelector('.trolado-tabs-header-labels');
+
     this.labelItem[0].classList.add('active-label');
 
     for(let i = 0; i < this.labelItem.length; i++){
@@ -77,6 +79,20 @@ export class TabsComponent implements OnInit, AfterViewInit {
     this.header.nativeElement.style.minWidth = width + 'px';
 
     this.indicator.style.width = this.labelItem[0].clientWidth+'px';
+
+    if(this.tabAlign == 'center'){
+
+      labels.style.justifyContent = 'center';
+      labels.style.display = 'flex';
+
+    } else if(this.tabAlign == 'right'){
+
+      labels.style.justifyContent = 'flex-end';
+      labels.style.display = 'flex';
+
+    }
+
+    this.exibir(0, null)
     
   }
 
@@ -90,10 +106,10 @@ export class TabsComponent implements OnInit, AfterViewInit {
       this.arrows = true;
       return true;
     } 
-
-
     
     this.arrows = false;
+
+    this.indicatorTransform(this.labelItem[this.atual], this.atual);
     
     return false;
 
@@ -106,31 +122,37 @@ export class TabsComponent implements OnInit, AfterViewInit {
     
     this.animable = false;  
 
-    let translateWidth:number = this.labelItem[item].offsetLeft;
+    let labelItem:any  = this.view.nativeElement.querySelectorAll('.trolado-tab-label-item');
 
-    this.indicator.style.width = this.labelItem[item].clientWidth+'px';
+
+    if(labelItem[this.atual]){
+
+      labelItem[this.atual].classList.remove('active-label');
     
-    this.indicator.style.transform = 'translateX('+translateWidth+'px)';
+    }
+    labelItem[item].classList.add('active-label');
 
-    this.view.nativeElement.querySelectorAll('.trolado-tab-label-item')[this.atual].classList.remove('active-label');
-    this.view.nativeElement.querySelectorAll('.trolado-tab-label-item')[item].classList.add('active-label');
+
+    this.contents[item].classList.remove('hidden');
 
     if(item > this.atual){
 
       this.wraper.classList.add('toRight');
-
-      this.contents[item].classList.remove('hidden');
   
     } else {
       
       this.wraper.classList.add('toLeft')
       
-      this.contents[item].classList.remove('hidden');
-
     } 
 
+    this.indicatorTransform(this.labelItem[item].offsetLeft, item);
+
+
     setTimeout(()=>{//RESET
-      this.contents[this.atual].classList.add('hidden');
+      if(this.contents[this.atual]){
+        this.contents[this.atual].classList.add('hidden');
+      }
+      this.indicatorTransform(this.labelItem[item].offsetLeft, item);
       this.wraper.classList.remove('toLeft', 'toRight');
       this.atual = item;
       this.animable = true;
@@ -152,7 +174,12 @@ export class TabsComponent implements OnInit, AfterViewInit {
    
   }
 
+  indicatorTransform(width, item){
 
+    this.indicator.style.width = this.labelItem[item].clientWidth+'px';
+    this.indicator.style.transform = 'translateX('+width+'px)';
+
+  }
 
 
   ripple(event, element){
