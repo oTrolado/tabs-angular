@@ -35,12 +35,23 @@
                 <div class="plus-body hidden" #plusBody>
                     <h3>Novo Conteudo</h3>
                     <textarea name="new_content" id="nw_ct" rows="30"></textarea>
-                    <div class="button">
-                        <button>
-                            <div class="clickArea" (click)="ripple($event)"></div>
-                            Salvar
-                        </button>
+
+                    <div class="button-container">
+                        <div class="button">
+                            <button class="button-secondary">
+                                <div class="clickArea" (click)="ripple($event); abortTAB()"></div>
+                                Cacelar
+                            </button>
+                        </div>
+                        <div class="button">
+                            <button class="button-primary">
+                                <div class="clickArea" (click)="ripple($event); saveTAB()"></div>
+                                Salvar
+                            </button>
+                        </div>
                     </div>
+                
+
                 </div>
             </ng-container>
         </div>

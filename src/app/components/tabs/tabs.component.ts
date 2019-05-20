@@ -40,7 +40,6 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit() {
-    
     let elements = this.view.nativeElement.querySelectorAll('.trolado-tab-label');
 
     if(this.scalable == 'true') this.plus = true;
@@ -65,8 +64,8 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
 
   ngAfterViewInit(){
-
-    this.labelItem = this.view.nativeElement.querySelectorAll('.trolado-tab-label-item');
+    
+    this.labelItem = this.view.nativeElement.querySelector('.trolado-tabs-header-labels').children;
     let width:number = 0;
     let labels = this.view.nativeElement.querySelector('.trolado-tabs-header-labels');
 
@@ -105,6 +104,16 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
 
 
+  clear(){//LIMPA A BAGUNÇA
+    this.labels = [];
+    this.atual += 1;
+    this.arrows = false;
+    //this.labelItem.push = this.view.nativeElement.querySelectorAll('.trolado-tab-label-item');
+  }
+
+
+
+
   onResize(event){//Organiza a "casa" quando a "familia" muda de tamanho
     let container = this.headerContainer.nativeElement.clientWidth;
     let element = this.header.nativeElement.clientWidth;
@@ -136,7 +145,6 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
 
   exibir(item, event){//EXECUTA TRANSIÇÃO DA TAB
-
     if(item == this.atual || !this.animable) return;
     
     this.animable = false;  
@@ -244,8 +252,43 @@ export class TabsComponent implements OnInit, AfterViewInit {
   abortTAB(){
 
     this.plusLabel.nativeElement.innerHTML = '<i class="fas fa-plus"></i>';
+    this.plusBody.nativeElement.querySelector('textarea').value = '';
+
+    setTimeout(() => this.exibir(0, null), 400);
 
   }
+
+
+  saveTAB(){//SALVA A NOVA TAB
+
+    console.log(this.plusLabel.nativeElement.querySelector('input').value);
+    console.log(this.plusBody.nativeElement.querySelector('textarea').value);
+
+    let tab = document.createElement('div');
+      tab.classList.add('trolado-tab');
+
+    let head = document.createElement('div');
+      head.classList.add('trolado-tab-label');
+      head.innerText = this.plusLabel.nativeElement.querySelector('input').value;
+
+    let body = document.createElement('div');
+      body.classList.add('trolado-tab-content');
+      body.innerHTML = this.plusBody.nativeElement.querySelector('textarea').value;
+
+    tab.appendChild(head);
+    tab.appendChild(body);
+    //tab.addEventListener('click', ($event) => console.log($event), false);
+
+    this.wraper.insertBefore(tab, this.wraper.lastChild);
+
+    this.clear();
+
+    this.ngOnInit();
+    this.ngAfterViewInit();
+
+
+  }
+
 
 
 
