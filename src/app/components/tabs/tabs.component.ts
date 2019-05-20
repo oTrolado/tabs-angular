@@ -64,7 +64,7 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
 
   ngAfterViewInit(){
-    
+
     this.labelItem = this.view.nativeElement.querySelector('.trolado-tabs-header-labels').children;
     let width:number = 0;
     let labels = this.view.nativeElement.querySelector('.trolado-tabs-header-labels');
@@ -72,7 +72,7 @@ export class TabsComponent implements OnInit, AfterViewInit {
     this.labelItem[0].classList.add('active-label');
 
     for(let i = 0; i < this.labelItem.length; i++){
-
+      
       width += this.labelItem[i].clientWidth;
 
     }
@@ -104,10 +104,11 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
 
 
-  clear(){//LIMPA A BAGUNÇA
+  clear(div){//LIMPA A BAGUNÇA
     this.labels = [];
     this.atual += 1;
     this.arrows = false;
+    this
     //this.labelItem.push = this.view.nativeElement.querySelectorAll('.trolado-tab-label-item');
   }
 
@@ -281,12 +282,12 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
     this.wraper.insertBefore(tab, this.wraper.lastChild);
 
-    this.clear();
+    this.clear(tab);
 
     this.ngOnInit();
     this.ngAfterViewInit();
-
-
+    //this.header.nativeElement.style.minWidth = width + 'px';
+    console.log(parseInt(this.header.nativeElement.style.minWidth));
   }
 
 
