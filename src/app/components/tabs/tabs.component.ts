@@ -70,8 +70,6 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
     }
 
-    //console.log(this.view.nativeElement.querySelectorAll('.trolado-tab-label-item')[i].clientWidth);
-
     this.header.nativeElement.style.left = 0;
 
     this.header.nativeElement.style.right = 0;
@@ -106,12 +104,12 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
     if(item == this.atual || !this.animable) return;
     
-    this.animable = false;    
+    this.animable = false;  
+
+    let translateWidth:number = this.labelItem[item].offsetLeft;
 
     this.indicator.style.width = this.labelItem[item].clientWidth+'px';
     
-    let translateWidth:number = this.labelItem[item].offsetLeft;
-
     this.indicator.style.transform = 'translateX('+translateWidth+'px)';
 
     this.view.nativeElement.querySelectorAll('.trolado-tab-label-item')[this.atual].classList.remove('active-label');
@@ -166,22 +164,15 @@ export class TabsComponent implements OnInit, AfterViewInit {
     elements[element].appendChild(div);
 
     div.style.top = (event.layerY)+"px";
-    div.style.left = (event.layerX)+"px";
-
-    if(event.target.clientWidth >= event.target.clientHeight){
-      
-      div.style.transform = 'scale('+(event.target.clientWidth*2.8)/12+')';
     
-    } else {
+    div.style.left = (event.layerX)+"px";
       
-      div.style.transform = 'scale('+(event.target.clientHeight*2.8)/12+')';
-
-    }
-
+    div.style.transform = 'scale('+(event.target.clientWidth*2.2)/12+')';
 
     setTimeout(()=>div.style.backgroundColor = 'transparent', 400);
     setTimeout(()=>div.remove(), 800);
   }
+
 
   navigate(direction){//NAVEGAÇÃO DO HEADER
     let positionLeft = parseInt(this.header.nativeElement.style.left);
