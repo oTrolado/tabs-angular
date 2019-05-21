@@ -136,6 +136,13 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
       this.header.nativeElement.style.left = '0';
     }
 
+    if(this.atual){
+      this.indicatorTransform(this.labelItem[this.atual].offsetLeft, this.labelItem[this.atual].clientWidth);
+    } else {
+      this.indicatorTransform(this.labelItem[0].offsetLeft, this.labelItem[0].clientWidth);
+    }
+    
+
   }
 
 
@@ -260,9 +267,6 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
   saveTAB(){//SALVA A NOVA TAB
 
-    console.log(this.plusLabel.nativeElement.querySelector('input').value);
-    console.log(this.plusBody.nativeElement.querySelector('textarea').value);
-
     let tab = document.createElement('div');
       tab.classList.add('trolado-tab');
 
@@ -292,7 +296,6 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
 
   indicatorTransform(translate, width){
-    console.log(width);
     this.indicator.style.width = width+'px';
     this.indicator.style.transform = 'translateX('+translate+'px)';
 
