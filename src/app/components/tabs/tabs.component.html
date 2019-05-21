@@ -2,29 +2,35 @@
     <div class="trolado-tabs-header" #headerContainer>
 
         <div class="trolado-tabs-arrow trolado-tabs-arrow-left" *ngIf="arrows" (click)="navigate('left')">
-                <div class="clickArea" (click)="ripple($event)"></div>
+                <trolado-ripple></trolado-ripple>
                 <i class="fas fa-chevron-left"></i>
         </div>
         <div class="trolado-tabs-arrow trolado-tabs-arrow-right" *ngIf="arrows" (click)="navigate('right')">
-                <div class="clickArea" (click)="ripple($event)"></div>
+                <trolado-ripple></trolado-ripple>
                 <i class="fas fa-chevron-right"></i>
         </div>
         
+        <!--  LABELS -->
         <div class="trolado-tabs-header-wraper" #header>
             <div class="trolado-tabs-header-labels" >
                 <div class="trolado-tab-label-item" *ngFor="let label of labels; let i = index">
-                    <div class="clickArea" (click)="exibir(i,$event); ripple($event)"></div>
+                    
+                    <trolado-ripple (click)="exibir(i,$event)"></trolado-ripple>
+                    
                     <strong>{{ label }}</strong>
+
                     <ng-container *ngIf="minus">
                             <div class="minus-container" (click)="delete(i)">
-                                <div class="clickArea" (click)="ripple($event)"></div>
+                                <trolado-ripple></trolado-ripple>
                                 <i class="fas fa-times"></i>
                             </div>
                     </ng-container>
+
                 </div>
 
+                <!--  Pluss Button -->
                 <div class="trolado-tab-label-item" *ngIf="plus" (click)="criarTAB($event);">
-                    <div class="clickArea" (click)="ripple($event)"></div>
+                    <trolado-ripple></trolado-ripple>
                     <strong #plusLabel><i class="fas fa-plus"></i></strong>
                 </div>
 
@@ -34,6 +40,9 @@
             </div>
         </div>
     </div>
+
+    <!--  Conteudo -->
+
     <div class="trolado-tabs-content">
         <div class="trolado-tabs-wraper">
             <ng-content selector=".trolado-tab-content"></ng-content>
@@ -44,20 +53,18 @@
 
                     <div class="button-container">
                         <div class="button">
-                            <button class="button-secondary">
-                                <div class="clickArea" (click)="ripple($event); abortTAB()"></div>
+                            <button class="button-secondary"  (click)="abortTAB()">
+                                <trolado-ripple></trolado-ripple>
                                 Cacelar
                             </button>
                         </div>
                         <div class="button">
                             <button class="button-primary">
-                                <div class="clickArea" (click)="ripple($event); saveTAB()"></div>
+                                <trolado-ripple (click)="saveTAB()"></trolado-ripple>
                                 Salvar
                             </button>
                         </div>
                     </div>
-                
-
                 </div>
             </ng-container>
         </div>

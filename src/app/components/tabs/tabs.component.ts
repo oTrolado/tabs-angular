@@ -94,8 +94,6 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
     this.header.nativeElement.style.right = 0;
 
-    //this.indicator.style.width = this.labelItem[0].clientWidth+'px';
-
     if(this.tabAlign == 'center'){
 
       labels.style.justifyContent = 'center';
@@ -310,11 +308,11 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
 
   abortTAB(){
-
-    this.plusLabel.nativeElement.innerHTML = '<i class="fas fa-plus"></i>';
-    this.plusBody.nativeElement.querySelector('textarea').value = '';
-    setTimeout(() => this.exibir(this.labelItem.length - 2, null), 400);
-
+    if(this.labels.length > 1){
+      this.plusLabel.nativeElement.innerHTML = '<i class="fas fa-plus"></i>';
+      this.plusBody.nativeElement.querySelector('textarea').value = '';
+      setTimeout(() => this.exibir(this.labelItem.length - 2, null), 400);
+    }
   }
 
 
@@ -325,26 +323,28 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
   saveTAB(){//SALVA A NOVA TAB
 
-    let tab = document.createElement('div');
+      setTimeout(()=>{
+      let tab = document.createElement('div');
       tab.classList.add('trolado-tab');
 
-    let head = document.createElement('div');
-      head.classList.add('trolado-tab-label');
-      head.innerText = this.plusLabel.nativeElement.querySelector('input').value;
+      let head = document.createElement('div');
+        head.classList.add('trolado-tab-label');
+        head.innerText = this.plusLabel.nativeElement.querySelector('input').value;
 
-    let body = document.createElement('div');
-      body.classList.add('trolado-tab-content');
-      body.innerHTML = this.plusBody.nativeElement.querySelector('textarea').value;
+      let body = document.createElement('div');
+        body.classList.add('trolado-tab-content');
+        body.innerHTML = this.plusBody.nativeElement.querySelector('textarea').value;
 
-    tab.appendChild(head);
-    tab.appendChild(body);
+      tab.appendChild(head);
+      tab.appendChild(body);
 
-    this.wraper.insertBefore(tab, this.wraper.lastChild);
+      this.wraper.insertBefore(tab, this.wraper.lastChild);
+      
+      this.clear();
 
-    this.clear();
-
-    this.plusLabel.nativeElement.innerHTML = '<i class="fas fa-plus"></i>';
-    this.plusBody.nativeElement.querySelector('textarea').value = '';
+      this.plusLabel.nativeElement.innerHTML = '<i class="fas fa-plus"></i>';
+      this.plusBody.nativeElement.querySelector('textarea').value = '';
+    }, 400);
   }
 
 
@@ -376,50 +376,6 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
   }
 
 
-
-
-
-
-
-
-
-  ripple(event){
-
-   let element;
-
-    event.path.map((item, index) => {//MAPEIA O ELEMENTO A SER ANIMADO
-      if(item.classList != null){
-        if(item.classList.contains('clickArea')){
-
-          element = event.path[index+1];
-
-        }
-      }
-    });
-
-    let div = document.createElement('div');
-    div.classList.add('ripple');
-
-    element.appendChild(div);
-
-    div.style.top = (event.layerY)+"px";
-    
-    div.style.left = (event.layerX)+"px";
-
-    if(event.target.clientWidth >= event.target.clientHeight){	
-
-      div.style.transform = 'scale('+(event.target.clientWidth*2.8)/12+')';	
-
-    } else {
-
-      div.style.transform = 'scale('+(event.target.clientHeight*2.8)/12+')';
-
-    }
-      
-    setTimeout(()=>div.style.backgroundColor = 'transparent', 400);//RESET
-    setTimeout(()=>div.remove(), 800);
-
-  }
 
 
 
