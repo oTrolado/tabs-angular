@@ -129,7 +129,7 @@ $hover-color:(rgba($primary-color,0.2));
 }
 
 
-/*Tabs*/
+/*Tabs-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 .trolado-tabs-content{
     
@@ -164,6 +164,11 @@ $hover-color:(rgba($primary-color,0.2));
     width: 50%;
     display: flex;
     flex-direction: column;
+}
+
+.plus-body textarea{
+    resize: none;
+    padding: 20px;
 }
 
 .button-container{
@@ -202,13 +207,18 @@ $hover-color:(rgba($primary-color,0.2));
 
 /*Minus -------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 .minus-container{
-    position: absolute;
-    top: 0;
-    right: 0;
+    position: relative;
+    margin-left: 10px;
     z-index: 3;
     overflow: hidden;
     border-radius: 10px;
     height: 16px;
+    transition: .5s color ease;
+}
+
+.minus-container:hover{
+    color: $secondary-color;
+    text-shadow: 0px 0px 1px rgba(41, 48, 46, 0.12);
 }
 
 /*Animations---------------------------------------------------------------------------------------------------------------------------------------------------------*/
