@@ -12,8 +12,14 @@
         
         <div class="trolado-tabs-header-wraper" #header>
             <div class="trolado-tabs-header-labels" >
-                <div class="trolado-tab-label-item" *ngFor="let label of labels; let i = index" (click)="exibir(i,$event);">
-                    <div class="clickArea" (click)="ripple($event)"></div>
+                <div class="trolado-tab-label-item" *ngFor="let label of labels; let i = index">
+                    <ng-container *ngIf="minus">
+                        <div class="minus-container" (click)="delete(i)">
+                            <div class="clickArea" (click)="ripple($event)"></div>
+                            <i class="fas fa-minus-circle"></i>
+                        </div>
+                    </ng-container>
+                    <div class="clickArea" (click)="exibir(i,$event); ripple($event)"></div>
                     <strong>{{ label }}</strong>
                 </div>
 

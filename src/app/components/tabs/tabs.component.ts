@@ -1,4 +1,11 @@
-import { Component, OnInit, AfterViewInit, AfterViewChecked, ElementRef, ViewChild, Input } from '@angular/core';
+import { Component, 
+          OnInit, 
+          AfterViewInit, 
+          AfterViewChecked, 
+          ElementRef, 
+          ViewChild, 
+          Input 
+} from '@angular/core';
 
 @Component({
   selector: 'trolado-tabs',
@@ -10,9 +17,12 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
   atual:number = null;
   arrows:boolean = false;
   animable: boolean = true;
-  @Input() tabAlign:String;
+  @Input() tabAlign:string;
   @Input() scalable:string;
+  @Input() redutive:string;
   plus:boolean = false;
+  minus:boolean = false;
+
 
   //HEADER
   labels:any = [];
@@ -39,10 +49,13 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
 
 
+
+
   ngOnInit() {
     let elements = this.view.nativeElement.querySelectorAll('.trolado-tab-label');
 
     if(this.scalable == 'true') this.plus = true;
+    if(this.redutive == 'true') this.minus = true;
 
     for(let i = 0; i < elements.length; i++){
 
@@ -58,8 +71,12 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     this.wraper = this.view.nativeElement.querySelector('.trolado-tabs-wraper');
     
     this.indicator = this.view.nativeElement.querySelector('.trolado-tabs-indicator');
-    
+   
   }
+
+
+
+
 
 
 
@@ -98,12 +115,21 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
 
 
+
+
+
+
   clear(){//LIMPA A BAGUNÇA
     this.labels = [];
     this.atual += 1;
     this.arrows = false;
     setTimeout(()=>this.onResize(null),500);
+    this.ngOnInit();
+    this.ngAfterViewInit();
   }
+
+
+
 
 
 
@@ -120,6 +146,9 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
     this.header.nativeElement.style.minWidth = width + 'px';
   }
+
+
+
 
 
 
@@ -148,8 +177,13 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
 
 
+
+
+
+
   exibir(item, event){//EXECUTA TRANSIÇÃO DA TAB
 
+    console.log('!'+ item);
     if(item == this.atual || !this.animable) return;
     
     this.animable = false;  
@@ -202,8 +236,11 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
         }
       }  
     }
-   
   }
+
+
+
+
 
 
   
@@ -255,6 +292,9 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
 
 
+
+
+
   abortTAB(){
 
     this.plusLabel.nativeElement.innerHTML = '<i class="fas fa-plus"></i>';
@@ -263,6 +303,11 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     setTimeout(() => this.exibir(this.labelItem.length - 2, null), 400);
 
   }
+
+
+
+
+
 
 
   saveTAB(){//SALVA A NOVA TAB
@@ -285,11 +330,25 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
     this.clear();
 
-    this.ngOnInit();
-    this.ngAfterViewInit();
-
     this.abortTAB();
   }
+
+
+
+
+
+
+  delete(item){
+
+    console.log(this.view.nativeElement.querySelectorAll('.trolado-tab-label')[item]);
+    this.view.nativeElement.querySelectorAll('.trolado-tab-label')[item].remove();
+    this.clear();
+//    this.labels.splice(item, 1);
+
+  }
+
+
+
 
 
 
@@ -300,6 +359,11 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     this.indicator.style.transform = 'translateX('+translate+'px)';
 
   }
+
+
+
+
+
 
 
 
@@ -345,6 +409,9 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
 
 
+
+
+
   navigate(direction){//NAVEGAÇÃO DO HEADER
     let positionLeft = parseInt(this.header.nativeElement.style.left);
     let headerWidth = parseInt(this.header.nativeElement.clientWidth);
@@ -372,8 +439,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
         this.header.nativeElement.style.left = positionLeft + (-1*(positionLeft)+ 19) + 'px';
       
-      }
-      
+      } 
     }
   }
 }
