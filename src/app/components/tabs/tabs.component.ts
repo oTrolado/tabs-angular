@@ -1,11 +1,11 @@
-import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, AfterViewInit, AfterViewChecked, ElementRef, ViewChild, Input } from '@angular/core';
 
 @Component({
   selector: 'trolado-tabs',
   templateUrl: './tabs.component.html',
   styleUrls: ['./tabs.component.scss']
 })
-export class TabsComponent implements OnInit, AfterViewInit {
+export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
   //CONTROLES DE ESTADO
   atual:number = null;
   arrows:boolean = false;
@@ -63,25 +63,19 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
 
 
+
+
   ngAfterViewInit(){
 
     this.labelItem = this.view.nativeElement.querySelector('.trolado-tabs-header-labels').children;
-    let width:number = 0;
+    
     let labels = this.view.nativeElement.querySelector('.trolado-tabs-header-labels');
 
     this.labelItem[0].classList.add('active-label');
 
-    for(let i = 0; i < this.labelItem.length; i++){
-      
-      width += this.labelItem[i].clientWidth;
-
-    }
-
     this.header.nativeElement.style.left = 0;
 
     this.header.nativeElement.style.right = 0;
-
-    this.header.nativeElement.style.minWidth = width + 'px';
 
     this.indicator.style.width = this.labelItem[0].clientWidth+'px';
 
@@ -104,13 +98,29 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
 
 
-  clear(div){//LIMPA A BAGUNÇA
+  clear(){//LIMPA A BAGUNÇA
     this.labels = [];
     this.atual += 1;
     this.arrows = false;
-    this
-    //this.labelItem.push = this.view.nativeElement.querySelectorAll('.trolado-tab-label-item');
+    setTimeout(()=>this.onResize(null),500);
   }
+
+
+
+
+  ngAfterViewChecked(){
+
+    let width:number = 0;
+
+    for(let i = 0; i < this.labelItem.length; i++){
+      
+      width += this.labelItem[i].clientWidth;
+
+    }
+
+    this.header.nativeElement.style.minWidth = width + 'px';
+  }
+
 
 
 
@@ -119,26 +129,12 @@ export class TabsComponent implements OnInit, AfterViewInit {
     let container = this.headerContainer.nativeElement.clientWidth;
     let element = this.header.nativeElement.clientWidth;
 
-    this.header.nativeElement.style.left = '0';
-
     if(container < element){
       this.arrows = true;
-      return true;
-    } 
-    
-    this.arrows = false;
-
-    if(this.labelItem[this.atual]){
-
-      this.indicatorTransform(this.labelItem[this.atual], this.labelItem[this.atual].clientWidth);  
-
-    } else if(this.atual <= this.labels.length) {
-
-      this.indicatorTransform(0, this.labelItem[0].clientWidth);
-
+    } else {
+      this.arrows = false;
+      this.header.nativeElement.style.left = '0';
     }
-        
-    return false;
 
   }
 
@@ -146,6 +142,7 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
 
   exibir(item, event){//EXECUTA TRANSIÇÃO DA TAB
+
     if(item == this.atual || !this.animable) return;
     
     this.animable = false;  
@@ -184,18 +181,19 @@ export class TabsComponent implements OnInit, AfterViewInit {
       this.animable = true;
     },400);
 
+    
     if( this.arrows ){//SE HOUVER ARROWS CHAMA O NAVIGATE
-
-      let clientX = event.clientX;
-      let headerX = this.headerContainer.nativeElement;
-
+      if(event){
+        let clientX = event.clientX;
+        let headerX = this.headerContainer.nativeElement;
       
-      if(clientX - headerX.offsetLeft < 100){
-        this.navigate('left');
-      } else if(clientX + headerX.offsetLeft > headerX.clientWidth - 100){
-        this.navigate('right');
-      }
-
+      
+        if(clientX - headerX.offsetLeft < 100){
+          this.navigate('left');
+        } else if(clientX + headerX.offsetLeft > headerX.clientWidth - 100){
+          this.navigate('right');
+        }
+      }  
     }
    
   }
@@ -254,8 +252,8 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
     this.plusLabel.nativeElement.innerHTML = '<i class="fas fa-plus"></i>';
     this.plusBody.nativeElement.querySelector('textarea').value = '';
-
-    setTimeout(() => this.exibir(0, null), 400);
+    console.log();
+    setTimeout(() => this.exibir(this.labelItem.length - 2, null), 400);
 
   }
 
@@ -278,16 +276,15 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
     tab.appendChild(head);
     tab.appendChild(body);
-    //tab.addEventListener('click', ($event) => console.log($event), false);
 
     this.wraper.insertBefore(tab, this.wraper.lastChild);
 
-    this.clear(tab);
+    this.clear();
 
     this.ngOnInit();
     this.ngAfterViewInit();
-    //this.header.nativeElement.style.minWidth = width + 'px';
-    console.log(parseInt(this.header.nativeElement.style.minWidth));
+
+    this.abortTAB();
   }
 
 
@@ -295,7 +292,7 @@ export class TabsComponent implements OnInit, AfterViewInit {
 
 
   indicatorTransform(translate, width){
-
+    console.log(width);
     this.indicator.style.width = width+'px';
     this.indicator.style.transform = 'translateX('+translate+'px)';
 
