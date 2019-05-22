@@ -99,9 +99,9 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
         }
 
         if (this.labels.length > 0) {
-            this.exibir(0, null);
+            this.exibir(0, null, this.labelItem[0]);
         } else {
-            this.criarTAB();
+            this.criarTAB(this.plusLabel.nativeElement);
         }
 
     }
@@ -168,14 +168,15 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     }
 
 
-    exibir(item, event) {//EXECUTA TRANSIÇÃO DA TAB
+    exibir(item, event, element) {//EXECUTA TRANSIÇÃO DA TAB
+
         if (item == this.atual || !this.animable) return;
 
         this.animable = false;
 
         this.deactivateLabels(0);
 
-        this.labelItem[item].classList.add('active-label');
+        element.classList.add('active-label');
 
         this.contents[item].classList.remove('hidden');
 
@@ -189,7 +190,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
         }
 
-        this.indicatorTransform(this.labelItem[item].offsetLeft, this.labelItem[item].clientWidth);
+        this.indicatorTransform(element.offsetLeft, element.clientWidth);
 
 
         setTimeout(() => {//RESET ---------------------------
@@ -202,7 +203,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
                 this.contents[this.atual].classList.add('hidden');
 
             }
-            this.indicatorTransform(this.labelItem[item].offsetLeft, this.labelItem[item].clientWidth);
+            this.indicatorTransform(element.offsetLeft, element.clientWidth);
             this.wraper.classList.remove('toLeft', 'toRight');
             this.atual = item;
             this.animable = true;
@@ -216,20 +217,20 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
 
                 if (clientX - headerX.offsetLeft < 100) {
-                    this.navigate('left',null);
+                    this.navigate('left');
                 } else if (clientX + headerX.offsetLeft > headerX.clientWidth - 100) {
-                    this.navigate('right',null);
+                    this.navigate('right');
                 }
             }
         }
     }
 
 
-    criarTAB() {//CRIA UM NOVA TAB
-        let label = this.plusLabel.nativeElement;
+    criarTAB(label) {//CRIA UM NOVA TAB
+        
         this.onPlus = true;
 
-        while(this.navigate('left',null));
+        while(this.navigate('left'));
 
         setTimeout(() => {
             label.querySelector('.label-input').innerText = '';
@@ -275,42 +276,37 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     }
 
 
-    inputKeypress(event){
+    inputKeypress(event, label){
         
-        let label = this.plusLabel.nativeElement;
-        let labelWidht = parseInt(label.clientWidth);
+        let labelWidht = label.clientWidth > 122 ? label.clientWidth : 122;
         
+
         if(labelWidht > this.headerContainer.nativeElement.clientWidth - 100){
             event.preventDefault();
         }
 
-        setTimeout(()=>{
-            this.newTab.title = label.querySelector('.label-input').innerText;
-        },100);
-        this.indicatorTransform(label.offsetLeft, label.clientWidth);
+        this.indicatorTransform(label.offsetLeft, labelWidht);
         this.onResize(null);
     }
 
 
-    inputBlur(event){
-        let label = this.plusLabel.nativeElement;
-        this.newTab.title = label.querySelector('.label-input').innerText;
-        this.indicatorTransform(label.offsetLeft, label.clientWidth);
-    }
 
 
-    abortTAB() {
+    abortTAB(textarea) {
         this.onPlus = false;
         if (this.labels.length > 1) {
-            this.plusBody.nativeElement.querySelector('textarea').value = '';
-            setTimeout(() => this.exibir(1, null), 400);
+            textarea.value = '';
+            setTimeout(() => this.exibir(1, null, this.labelItem[1]), 400);
         }
     }
 
 
-    saveTAB() {//SALVA A NOVA TAB
+    saveTAB(label) {//SALVA A NOVA TAB
 
         setTimeout(() => {
+
+            this.newTab.title = label.querySelector('.label-input').innerText;
+            
             let tab = document.createElement('div');
             tab.classList.add('trolado-tab');
 
@@ -349,15 +345,10 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     }
 
 
-    navigate(direction, vall) {//NAVEGAÇÃO DO HEADER
+    navigate(direction) {//NAVEGAÇÃO DO HEADER
         let positionLeft = parseInt(this.header.nativeElement.style.left);
         let headerWidth = parseInt(this.header.nativeElement.clientWidth);
         let containerWidth = parseInt(this.headerContainer.nativeElement.clientWidth);
-
-        if(vall){
-            this.header.nativeElement.style.left = positionLeft - vall + 'px';
-            return true;
-        }
 
         if (direction == 'right') {
 

@@ -16,9 +16,9 @@
                
 
 
-                <div class="trolado-tab-label-item" *ngFor="let label of labels; let i = index">
+                <div class="trolado-tab-label-item" *ngFor="let label of labels; let i = index" #labelsin>
                     
-                    <trolado-ripple (click)="exibir(i,$event)"></trolado-ripple>
+                    <trolado-ripple (click)="exibir(i,$event,labelsin)"></trolado-ripple>
                             <strong>{{ label }}</strong>
 
                             <ng-container *ngIf="minus">
@@ -33,12 +33,12 @@
 
 
                  <!--  Pluss Button -->
-                <div class="trolado-tab-label-item plus-label" *ngIf="plus" (click)="criarTAB($event);" #plusLabel>
+                <div class="trolado-tab-label-item plus-label" *ngIf="plus" (click)="criarTAB(plusLabel);" #plusLabel>
                     <trolado-ripple></trolado-ripple>
                     <strong>
-                        <i class="fas fa-plus" *ngIf="!onPlus"></i>
+                        <i class="fas fa-plus" *ngIf="!onPlus; else inputDiv"></i>
                         <ng-container *ngIf="onPlus">
-                            <div class='label-input' (blur)="inputBlur($event)"  (keypress)="inputKeypress($event)" *ngIf="inputFocus" contenteditable="true">Title</div>
+                            <div class='label-input' (keypress)="inputKeypress($event, plusLabel)" contenteditable="true" #input>Title</div>
                         </ng-container>
                     </strong>
                 </div>
@@ -60,18 +60,18 @@
             <ng-container *ngIf="plus">
                 <div class="plus-body hidden" #plusBody>
                     <h3>Novo Conteudo</h3>
-                    <textarea name="new_content" id="nw_ct" rows="30" [(ngModel)]="newTab.body" (chage)="plusChange()"></textarea>
+                    <textarea name="new_content" id="nw_ct" rows="30" [(ngModel)]="newTab.body" (chage)="plusChange()" #textarea></textarea>
 
                     <div class="button-container">
                         <div class="button">
-                            <button class="button-secondary"  (click)="abortTAB()">
+                            <button class="button-secondary"  (click)="abortTAB(textarea)">
                                 <trolado-ripple></trolado-ripple>
                                 Cacelar
                             </button>
                         </div>
                         <div class="button">
                             <button class="button-primary">
-                                <trolado-ripple (click)="saveTAB()"></trolado-ripple>
+                                <trolado-ripple (click)="saveTAB(plusLabel.nativeElement)"></trolado-ripple>
                                 Salvar
                             </button>
                         </div>
