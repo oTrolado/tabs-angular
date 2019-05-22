@@ -158,6 +158,9 @@ $hover-color:(rgba($primary-color,0.2));
     text-align: center;
 }
 
+.label-input input{
+    min-width: 60px;
+}
 .plus-body{
     position: relative;
     text-align: center;

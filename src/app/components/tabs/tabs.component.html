@@ -31,7 +31,13 @@
                 <!--  Pluss Button -->
                 <div class="trolado-tab-label-item" *ngIf="plus" (click)="criarTAB($event);">
                     <trolado-ripple></trolado-ripple>
-                    <strong #plusLabel><i class="fas fa-plus"></i></strong>
+                    <strong #plusLabel>
+                        <i class="fas fa-plus" *ngIf="!onPlus"></i>
+                        <ng-container *ngIf="onPlus">
+                            <input class='label-input'  name="title" [(ngModel)]="newTab.title" (blur)="inputBlur()" *ngIf="inputFocus">
+                            <span *ngIf="!inputFocus">{{ newTab.title }}</span>
+                        </ng-container>
+                    </strong>
                 </div>
 
             </div>
@@ -49,7 +55,7 @@
             <ng-container *ngIf="plus">
                 <div class="plus-body hidden" #plusBody>
                     <h3>Novo Conteudo</h3>
-                    <textarea name="new_content" id="nw_ct" rows="30"></textarea>
+                    <textarea name="new_content" id="nw_ct" rows="30" [(ngModel)]="newTab.body" (chage)="plusChange()"></textarea>
 
                     <div class="button-container">
                         <div class="button">
