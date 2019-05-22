@@ -78,7 +78,7 @@ $hover-color:(rgba($primary-color,0.2));
     display: flex;
     justify-content: center;
     min-width: 90px;
-    
+    order: 1;
 }
 
 .trolado-tab-label-item strong{
@@ -152,8 +152,11 @@ $hover-color:(rgba($primary-color,0.2));
 
 /*Plus--------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+.plus-label{
+    order: 0;
+}
+
 .label-input{
-    width: 90px;
     border: none;
     text-align: center;
 }

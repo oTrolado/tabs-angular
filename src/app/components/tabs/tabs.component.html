@@ -13,32 +13,38 @@
         <!--  LABELS -->
         <div class="trolado-tabs-header-wraper" #header>
             <div class="trolado-tabs-header-labels" >
+               
+
+
                 <div class="trolado-tab-label-item" *ngFor="let label of labels; let i = index">
                     
                     <trolado-ripple (click)="exibir(i,$event)"></trolado-ripple>
-                    
-                    <strong>{{ label }}</strong>
+                            <strong>{{ label }}</strong>
 
-                    <ng-container *ngIf="minus">
-                            <div class="minus-container" (click)="delete(i)">
-                                <trolado-ripple></trolado-ripple>
-                                <i class="fas fa-times"></i>
-                            </div>
-                    </ng-container>
+                            <ng-container *ngIf="minus">
+                                    <div class="minus-container" (click)="delete(i)">
+                                        <trolado-ripple></trolado-ripple>
+                                        <i class="fas fa-times"></i>
+                                    </div>
+                            </ng-container>
+                    
 
                 </div>
 
-                <!--  Pluss Button -->
-                <div class="trolado-tab-label-item" *ngIf="plus" (click)="criarTAB($event);">
+
+                 <!--  Pluss Button -->
+                <div class="trolado-tab-label-item plus-label" *ngIf="plus" (click)="criarTAB($event);" #plusLabel>
                     <trolado-ripple></trolado-ripple>
-                    <strong #plusLabel>
+                    <strong>
                         <i class="fas fa-plus" *ngIf="!onPlus"></i>
                         <ng-container *ngIf="onPlus">
-                            <input class='label-input'  name="title" [(ngModel)]="newTab.title" (blur)="inputBlur()" *ngIf="inputFocus">
+                            <div class='label-input' (blur)="inputBlur($event)"  (keypress)="inputKeypress($event)" *ngIf="inputFocus" contenteditable="true">Title</div>
                             <span *ngIf="!inputFocus">{{ newTab.title }}</span>
                         </ng-container>
                     </strong>
                 </div>
+
+                
 
             </div>
             <div class="trolado-tabs-indicator-container">
@@ -51,7 +57,7 @@
 
     <div class="trolado-tabs-content">
         <div class="trolado-tabs-wraper">
-            <ng-content selector=".trolado-tab-content"></ng-content>
+            
             <ng-container *ngIf="plus">
                 <div class="plus-body hidden" #plusBody>
                     <h3>Novo Conteudo</h3>
@@ -73,6 +79,8 @@
                     </div>
                 </div>
             </ng-container>
+
+            <ng-content selector=".trolado-tab-content"></ng-content>
         </div>
     </div>
 </div>

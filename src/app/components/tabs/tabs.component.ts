@@ -25,20 +25,19 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     minus: boolean = false;
     onPlus: boolean = false;
     inputFocus: boolean = false;
-    newTab:any = {};
-
+    newTab:any = {title:'',body:''};
+    
 
     //HEADER
     labels: any = [];
     labelItem: any;
     indicator: any;
 
+
     //CONTEUDO
     contents: any;
     tabs: any = [];
     wraper: any;
-
-
 
 
     @ViewChild("header") header: ElementRef;
@@ -50,9 +49,6 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     constructor(
         private view: ElementRef
     ) { }
-
-
-
 
 
     ngOnInit() {
@@ -77,13 +73,6 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
         this.indicator = this.view.nativeElement.querySelector('.trolado-tabs-indicator');
 
     }
-
-
-
-
-
-
-
 
 
     ngAfterViewInit() {
@@ -118,14 +107,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
     }
 
-
-
-
-
-
-
-
-    clear() {//LIMPA A BAGUNÇA
+    clear() {//RESETA O HEADER E O BODY
         this.onPlus = false;
         this.labels = [];
         this.atual += 1;
@@ -135,11 +117,6 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
         this.ngOnInit();
         this.ngAfterViewInit();
     }
-
-
-
-
-
 
 
     ngAfterViewChecked() {
@@ -159,12 +136,6 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
         //this.header.nativeElement.style.maxWidth = width + 'px';
         this.header.nativeElement.style.minWidth = width + 'px';
     }
-
-
-
-
-
-
 
 
     onResize(event) {//Organiza a "casa" quando a "familia" muda de tamanho
@@ -189,9 +160,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     }
 
 
-
-
-    deactivateLabels(i) {
+    deactivateLabels(i) {//REMOVE MARCAÇÃO ATIVA DOS LABELS
         if (i < this.labelItem.length) {
             this.labelItem[i].classList.remove('active-label');
             this.deactivateLabels(++i);
@@ -200,9 +169,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     }
 
 
-
     exibir(item, event) {//EXECUTA TRANSIÇÃO DA TAB
-
         if (item == this.atual || !this.animable) return;
 
         this.animable = false;
@@ -213,7 +180,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
         this.contents[item].classList.remove('hidden');
 
-        if (item > this.atual) {
+        if (item > this.atual || this.atual-1 == this.labels.length) {
 
             this.wraper.classList.add('toRight');
 
@@ -259,27 +226,16 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     }
 
 
-
-
-
-
-
-
-
     criarTAB() {//CRIA UM NOVA TAB
-        let label = this.plusLabel.nativeElement.parentElement;
-        let labelWidht = parseInt(label.clientWidth);
+        let label = this.plusLabel.nativeElement;
         this.inputFocus = true;
         this.onPlus = true;
 
-        while(this.navigate('right',null));
+        while(this.navigate('left',null));
 
-        if(labelWidht > 122){
-            this.navigate(null,-1*labelWidht+120);
-        }
-       
         setTimeout(() => {
-            this.plusLabel.nativeElement.querySelector('input').focus();
+            this.plusLabel.nativeElement.querySelector('.label-input').innerText = '';
+            this.plusLabel.nativeElement.querySelector('.label-input').focus();
         }, 400);
 
         if (this.animable && this.labelItem.length > 1) {
@@ -300,7 +256,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
             }
             this.plusBody.nativeElement.classList.remove('hidden');
 
-            this.wraper.classList.add('toRight');
+            this.wraper.classList.add('toLeft');
 
             this.indicatorTransform(label.offsetLeft, label.clientWidth);
 
@@ -321,40 +277,37 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     }
 
 
-
-
-
-
-    inputBlur(){
-        this.inputFocus = false;
-        let label = this.plusLabel.nativeElement.parentElement;
-       
+    inputKeypress(event){
         
-        setTimeout(() => {
-            while(this.navigate('right',null));
-            this.indicatorTransform(label.offsetLeft, label.clientWidth);
-        }, 400);
+        let label = this.plusLabel.nativeElement;
+        let labelWidht = parseInt(label.clientWidth);
+        
+        if(labelWidht > this.headerContainer.nativeElement.clientWidth - 100){
+            event.preventDefault();
+        }
+
+        setTimeout(()=>{
+            this.newTab.title = label.querySelector('.label-input').innerText;
+        },100);
+        this.indicatorTransform(label.offsetLeft, label.clientWidth);
+        this.onResize(null);
     }
 
 
-
-
-
-
+    inputBlur(event){
+        let label = this.plusLabel.nativeElement;
+        this.newTab.title = label.querySelector('.label-input').innerText;
+        this.indicatorTransform(label.offsetLeft, label.clientWidth);
+    }
 
 
     abortTAB() {
         this.onPlus = false;
         if (this.labels.length > 1) {
             this.plusBody.nativeElement.querySelector('textarea').value = '';
-            setTimeout(() => this.exibir(this.labelItem.length - 2, null), 400);
+            setTimeout(() => this.exibir(1, null), 400);
         }
     }
-
-
-
-
-
 
 
     saveTAB() {//SALVA A NOVA TAB
@@ -374,18 +327,14 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
             tab.appendChild(head);
             tab.appendChild(body);
 
-            this.wraper.insertBefore(tab, this.wraper.lastChild);
+            this.wraper.appendChild(tab);
 
             this.clear();
         }, 400);
     }
 
 
-
-
-
-
-    delete(item) {
+    delete(item) {//DELETA UMA TAB
 
         setTimeout(() => {
             this.view.nativeElement.querySelectorAll('.trolado-tab')[item].remove();
@@ -395,25 +344,11 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     }
 
 
-
-
-
-
-
-
-
-    indicatorTransform(translate, width) {
+    indicatorTransform(translate, width) {//MUDA O INDICADOR DE POSIÇÃO/TAMNHo
         this.indicator.style.width = width + 'px';
         this.indicator.style.transform = 'translateX(' + translate + 'px)';
 
     }
-
-
-
-
-
-
-
 
 
     navigate(direction, vall) {//NAVEGAÇÃO DO HEADER
