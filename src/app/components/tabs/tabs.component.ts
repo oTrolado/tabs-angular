@@ -24,7 +24,6 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     plus: boolean = false;
     minus: boolean = false;
     onPlus: boolean = false;
-    inputFocus: boolean = false;
     newTab:any = {title:'',body:''};
     
 
@@ -228,7 +227,6 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
     criarTAB() {//CRIA UM NOVA TAB
         let label = this.plusLabel.nativeElement;
-        this.inputFocus = true;
         this.onPlus = true;
 
         while(this.navigate('left',null));
