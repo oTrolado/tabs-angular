@@ -234,8 +234,8 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
         while(this.navigate('left',null));
 
         setTimeout(() => {
-            this.plusLabel.nativeElement.querySelector('.label-input').innerText = '';
-            this.plusLabel.nativeElement.querySelector('.label-input').focus();
+            label.querySelector('.label-input').innerText = '';
+            label.querySelector('.label-input').focus();
         }, 400);
 
         if (this.animable && this.labelItem.length > 1) {
