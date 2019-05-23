@@ -172,9 +172,10 @@ $hover-color:(rgba($primary-color,0.2));
     flex-direction: column;
 }
 
-.plus-body textarea{
+.textarea{
     resize: none;
     padding: 20px;
+    text-align: justify
 }
 
 .button-container{

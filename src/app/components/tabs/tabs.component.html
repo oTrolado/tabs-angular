@@ -22,7 +22,7 @@
                             <strong>{{ label }}</strong>
 
                             <ng-container *ngIf="minus">
-                                    <div class="minus-container" (click)="delete(i)">
+                                    <div class="minus-container" (click)="delete(labelsin,i)">
                                         <trolado-ripple></trolado-ripple>
                                         <i class="fas fa-times"></i>
                                     </div>
@@ -55,13 +55,13 @@
     <!--  Conteudo -->
 
     <div class="trolado-tabs-content">
-        <div class="trolado-tabs-wraper">
-            
+        <div class="trolado-tabs-wraper">           
             <ng-container *ngIf="plus">
                 <div class="plus-body hidden" #plusBody>
                     <h3>Novo Conteudo</h3>
-                    <textarea name="new_content" id="nw_ct" rows="30" [(ngModel)]="newTab.body" (chage)="plusChange()" #textarea></textarea>
-
+                    <div contenteditable="true" class="textarea" (chage)="plusChange()" #textarea>
+                        --Me Edite--
+                    </div>
                     <div class="button-container">
                         <div class="button">
                             <button class="button-secondary"  (click)="abortTAB(textarea)">
@@ -71,14 +71,13 @@
                         </div>
                         <div class="button">
                             <button class="button-primary">
-                                <trolado-ripple (click)="saveTAB(plusLabel.nativeElement)"></trolado-ripple>
+                                <trolado-ripple (click)="saveTAB(plusLabel.nativeElement, textarea)"></trolado-ripple>
                                 Salvar
                             </button>
                         </div>
                     </div>
                 </div>
             </ng-container>
-
             <ng-content selector=".trolado-tab-content"></ng-content>
         </div>
     </div>

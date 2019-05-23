@@ -97,8 +97,9 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
             labels.style.display = 'flex';
 
         }
-
+        
         if (this.labels.length > 0) {
+            if(this.atual == 0) this.atual = null;
             this.exibir(0, null, this.labelItem[0]);
         } else {
             this.criarTAB(this.plusLabel.nativeElement);
@@ -109,7 +110,6 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     clear() {//RESETA O HEADER E O BODY
         this.onPlus = false;
         this.labels = [];
-        this.atual += 1;
         this.arrows = false;
         this.newTab = {};
         setTimeout(() => this.onResize(null), 500);
@@ -149,7 +149,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
         }
 
         if (this.labels > 1) {
-            if (this.atual) {
+            if (this.atual == 0) {
                 this.indicatorTransform(this.labelItem[this.atual].offsetLeft, this.labelItem[this.atual].clientWidth);
             } else {
                 this.indicatorTransform(this.labelItem[0].offsetLeft, this.labelItem[0].clientWidth);
@@ -169,6 +169,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
 
     exibir(item, event, element) {//EXECUTA TRANSIÇÃO DA TAB
+        console.log(this.atual);
 
         if (item == this.atual || !this.animable) return;
 
@@ -179,9 +180,8 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
         element.classList.add('active-label');
 
         this.contents[item].classList.remove('hidden');
-
-        if (item > this.atual || this.atual-1 == this.labels.length) {
-
+        console.log(this.atual+' '+item+" "+this.labels.length);
+        if ((item > this.atual || this.atual >= this.labels.length) || this.atual-1 == this.labels.length) {
             this.wraper.classList.add('toRight');
 
         } else {
@@ -194,8 +194,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
 
         setTimeout(() => {//RESET ---------------------------
-            if (this.atual == this.labels.length + 1) {
-
+            if (this.atual >= this.labels.length) {
                 this.plusBody.nativeElement.classList.add('hidden');
 
             } else if (this.atual != null && this.labels.length > 1 && this.atual < this.labels.length) {
@@ -227,7 +226,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
 
     criarTAB(label) {//CRIA UM NOVA TAB
-        
+        console.log(label);
         this.onPlus = true;
 
         while(this.navigate('left'));
@@ -237,10 +236,9 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
             label.querySelector('.label-input').focus();
         }, 400);
 
-        if (this.animable && this.labelItem.length > 1) {
-            if ((this.atual > this.labels.length || !this.animable)
-                && this.labels.length > 1) return false;
-
+        if (this.animable && this.labelItem.length > 0) {
+            if(this.atual == this.labels.length +1) return console.log('off');
+            
             this.animable = false;
 
             if (this.labelItem[this.atual]) {
@@ -295,18 +293,19 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     abortTAB(textarea) {
         this.onPlus = false;
         if (this.labels.length > 1) {
-            textarea.value = '';
-            setTimeout(() => this.exibir(1, null, this.labelItem[1]), 400);
+            textarea.innerHTML = '--Me Edite--';
+            setTimeout(() => this.exibir(0, null, this.labelItem[0]), 400);
         }
     }
 
 
-    saveTAB(label) {//SALVA A NOVA TAB
+    saveTAB(label, content) {//SALVA A NOVA TAB
 
         setTimeout(() => {
 
             this.newTab.title = label.querySelector('.label-input').innerText;
-            
+            this.newTab.body = content.innerHTML;
+
             let tab = document.createElement('div');
             tab.classList.add('trolado-tab');
 
@@ -322,18 +321,19 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
             tab.appendChild(body);
 
             this.wraper.appendChild(tab);
+            content.innerHTML = '--Me Edite--';
 
             this.clear();
         }, 400);
     }
 
 
-    delete(item) {//DELETA UMA TAB
+    delete(item, index) {//DELETA UMA TAB
 
         setTimeout(() => {
-            this.view.nativeElement.querySelectorAll('.trolado-tab')[item].remove();
+            item.remove();
+            this.contents[index].remove();
             this.clear();
-            setTimeout(() => this.labelItem[0].classList.add('active-label'), 0);
         }, 400);
     }
 
