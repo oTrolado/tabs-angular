@@ -169,7 +169,6 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
 
     exibir(item, event, element) {//EXECUTA TRANSIÇÃO DA TAB
-        console.log(this.atual);
 
         if (item == this.atual || !this.animable) return;
 
@@ -180,7 +179,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
         element.classList.add('active-label');
 
         this.contents[item].classList.remove('hidden');
-        console.log(this.atual+' '+item+" "+this.labels.length);
+
         if ((item > this.atual || this.atual >= this.labels.length) || this.atual-1 == this.labels.length) {
             this.wraper.classList.add('toRight');
 
@@ -226,7 +225,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
 
     criarTAB(label) {//CRIA UM NOVA TAB
-        console.log(label);
+
         this.onPlus = true;
 
         while(this.navigate('left'));
@@ -237,7 +236,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
         }, 400);
 
         if (this.animable && this.labelItem.length > 0) {
-            if(this.atual == this.labels.length +1) return console.log('off');
+            if(this.atual == this.labels.length +1) return false;
             
             this.animable = false;
 
@@ -328,13 +327,13 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     }
 
 
-    delete(item, index) {//DELETA UMA TAB
-
+    delete(item, index, event) {//DELETA UMA TAB
+        event.stopPropagation();
         setTimeout(() => {
             item.remove();
             this.contents[index].remove();
             this.clear();
-        }, 400);
+        },400);
     }
 
 

@@ -1,12 +1,10 @@
 <div class="trolado-tabs" (window:resize)="onResize($event)" (window:load)="onResize($event)">
     <div class="trolado-tabs-header" #headerContainer>
 
-        <div class="trolado-tabs-arrow trolado-tabs-arrow-left" *ngIf="arrows" (click)="navigate('left')">
-                <trolado-ripple></trolado-ripple>
+        <div class="trolado-tabs-arrow trolado-tabs-arrow-left" *ngIf="arrows" (click)="navigate('left')" ripple>
                 <i class="fas fa-chevron-left"></i>
         </div>
-        <div class="trolado-tabs-arrow trolado-tabs-arrow-right" *ngIf="arrows" (click)="navigate('right')">
-                <trolado-ripple></trolado-ripple>
+        <div class="trolado-tabs-arrow trolado-tabs-arrow-right" *ngIf="arrows" (click)="navigate('right')" ripple>
                 <i class="fas fa-chevron-right"></i>
         </div>
         
@@ -16,25 +14,22 @@
                
 
 
-                <div class="trolado-tab-label-item" *ngFor="let label of labels; let i = index" #labelsin>
+                <div class="trolado-tab-label-item" *ngFor="let label of labels; let i = index" #labelsin ripple (click)="exibir(i,$event,labelsin)">
                     
-                    <trolado-ripple (click)="exibir(i,$event,labelsin)"></trolado-ripple>
-                            <strong>{{ label }}</strong>
+                    <strong>{{ label }}</strong>
 
-                            <ng-container *ngIf="minus">
-                                    <div class="minus-container" (click)="delete(labelsin,i)">
-                                        <trolado-ripple></trolado-ripple>
-                                        <i class="fas fa-times"></i>
-                                    </div>
-                            </ng-container>
+                    <ng-container *ngIf="minus">
+                            <div class="minus-container" (click)="delete(labelsin,i,$event)">
+                                <i class="fas fa-times"></i>
+                            </div>
+                    </ng-container>
                     
 
                 </div>
 
 
                  <!--  Pluss Button -->
-                <div class="trolado-tab-label-item plus-label" *ngIf="plus" (click)="criarTAB(plusLabel);" #plusLabel>
-                    <trolado-ripple></trolado-ripple>
+                <div class="trolado-tab-label-item plus-label" *ngIf="plus" (click)="criarTAB(plusLabel);" #plusLabel ripple>
                     <strong>
                         <i class="fas fa-plus" *ngIf="!onPlus; else inputDiv"></i>
                         <ng-container *ngIf="onPlus">
@@ -64,14 +59,12 @@
                     </div>
                     <div class="button-container">
                         <div class="button">
-                            <button class="button-secondary"  (click)="abortTAB(textarea)">
-                                <trolado-ripple></trolado-ripple>
+                            <button class="button-secondary"  (click)="abortTAB(textarea)" ripple>
                                 Cacelar
                             </button>
                         </div>
                         <div class="button">
-                            <button class="button-primary">
-                                <trolado-ripple (click)="saveTAB(plusLabel.nativeElement, textarea)"></trolado-ripple>
+                            <button class="button-primary" (click)="saveTAB(plusLabel.nativeElement, textarea)" ripple>
                                 Salvar
                             </button>
                         </div>
