@@ -147,10 +147,10 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
             this.header.nativeElement.style.left = '0';
         }
 
-        if (this.labels > 1) {
-            if (this.atual == 0) {
+        if (this.labels.length > 1) {
+            if (this.atual > 0 && this.atual <= this.labels.length) {
                 this.indicatorTransform(this.labelItem[this.atual].offsetLeft, this.labelItem[this.atual].clientWidth);
-            } else {
+            } else if(this.atual == 0) {
                 this.indicatorTransform(this.labelItem[0].offsetLeft, this.labelItem[0].clientWidth);
             }
         }
@@ -299,31 +299,33 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
 
     saveTAB(label, content) {//SALVA A NOVA TAB
+        if(this.del){
+            this.del = false;
+            setTimeout(() => {
 
-        setTimeout(() => {
+                this.newTab.title = label.querySelector('.label-input').innerText;
+                this.newTab.body = content.innerHTML;
 
-            this.newTab.title = label.querySelector('.label-input').innerText;
-            this.newTab.body = content.innerHTML;
+                let tab = document.createElement('div');
+                tab.classList.add('trolado-tab');
 
-            let tab = document.createElement('div');
-            tab.classList.add('trolado-tab');
+                let head = document.createElement('div');
+                head.classList.add('trolado-tab-label');
+                head.innerText = this.newTab.title;
 
-            let head = document.createElement('div');
-            head.classList.add('trolado-tab-label');
-            head.innerText = this.newTab.title;
+                let body = document.createElement('div');
+                body.classList.add('trolado-tab-content');
+                body.innerHTML = this.newTab.body;
 
-            let body = document.createElement('div');
-            body.classList.add('trolado-tab-content');
-            body.innerHTML = this.newTab.body;
+                tab.appendChild(head);
+                tab.appendChild(body);
 
-            tab.appendChild(head);
-            tab.appendChild(body);
+                this.wraper.appendChild(tab);
+                content.innerHTML = '--Me Edite--';
 
-            this.wraper.appendChild(tab);
-            content.innerHTML = '--Me Edite--';
-
-            this.clear();
-        }, 400);
+                this.clear();
+            }, 400);
+        }
     }
 
 

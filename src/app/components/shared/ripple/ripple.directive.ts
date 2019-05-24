@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
 
 @Directive({
   selector: '[ripple]'
@@ -6,36 +6,55 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
 export class RippleDirective {
 
 
-  ripple:any;
-  prevent:any;
+  ripple:HTMLElement;
+  prevent:HTMLElement;
+
+  constructor(
+    private elementRef: ElementRef,
+    private renderer: Renderer2
+  ) { 
+    this.renderer.addClass(
+        this.elementRef.nativeElement,
+        'ripple-container'
+    );
+  }
+
 
   @HostListener('mousedown', ['$event']) mouseDown(event){//DISPARA O RIPPLE AO CLIQUE
     let target = event.target;
+    
+    this.prevent = this.renderer.createElement('div');
+    this.renderer.addClass(this.prevent, 'prevent');
 
-    this.prevent = document.createElement('div');
-    this.prevent.classList.add('prevent');
-
-    this.ripple = document.createElement('div');
-    this.ripple.classList.add('ripple');
+    this.ripple = this.renderer.createElement('div');
+    this.renderer.addClass(this.ripple, 'ripple');
 
     if(target.classList.contains('ripple') || target.classList.contains('prevent')){
-      target.parentNode.appendChild(this.prevent);
-      target.parentNode.appendChild(this.ripple);
+        this.renderer.appendChild(target.parentNode, this.prevent);
+        this.renderer.appendChild(target.parentNode, this.ripple);
     } else {
-      target.appendChild(this.prevent);
-      target.appendChild(this.ripple);
+        this.renderer.appendChild(target, this.prevent);
+        this.renderer.appendChild(target, this.ripple);
     }
-    this.ripple.style.top = (event.layerY)+"px";
+
+    this.renderer.setStyle(this.ripple, 'top', (event.layerY)+"px");
+
+    this.renderer.setStyle(this.ripple, 'left', (event.layerX)+"px");
+
     
-    this.ripple.style.left = (event.layerX)+"px";
-
     if(target.clientWidth >= target.clientHeight){	
-
-      this.ripple.style.transform = 'scale('+(this.elementRef.nativeElement.clientWidth*2.8)/12+')';	
+        
+        this.renderer.setStyle(
+            this.ripple, 
+            'transform', 
+            'scale('+(this.elementRef.nativeElement.clientWidth*2.4)/12+')');
 
     } else {
 
-      this.ripple.style.transform = 'scale('+(this.elementRef.nativeElement.clientHeight*2.8)/12+')';
+        this.renderer.setStyle(
+            this.ripple, 
+            'transform', 
+            'scale('+(this.elementRef.nativeElement.clientHeight*2.4)/12+')');
 
     }
 
@@ -48,7 +67,11 @@ export class RippleDirective {
       setTimeout(() => {
 
         try{
-          event.target.nextSibling.style.backgroundColor = 'transparent';
+            this.renderer.setStyle(
+                event.target.nextSibling,
+                'backgroundColor',
+                'transparent'
+                );
         } catch{/*o ripple ja foi removido*/}
 
       }, 200);//RESET
@@ -56,8 +79,8 @@ export class RippleDirective {
       setTimeout(()=>{
 
         try{
-          event.target.nextSibling.remove();
-          event.target.remove();
+            event.target.nextSibling.remove();
+            event.target.remove();
         } catch{/*o ripple ja foi removido*/}
       }, 600);
 
@@ -71,7 +94,11 @@ export class RippleDirective {
       setTimeout(() => {
 
           try{
-            event.fromElement.nextSibling.style.backgroundColor = 'transparent';
+            this.renderer.setStyle(
+                event.fromElement.nextSibling,
+                'backgroundColor',
+                'transparent'
+                );
           } catch{/*o ripple ja foi removido*/}
 
         },200);//RESET
@@ -88,10 +115,6 @@ export class RippleDirective {
     }
   }
 
-  constructor(
-    private elementRef: ElementRef,
-  ) { 
-    this.elementRef.nativeElement.classList.add('ripple-container');
-  }
+  
 
 }
