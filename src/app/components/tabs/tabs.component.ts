@@ -25,6 +25,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     minus: boolean = false;
     onPlus: boolean = false;
     newTab:any = {title:'',body:''};
+    del:boolean = true;
     
 
     //HEADER
@@ -80,8 +81,6 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
         let labels = this.view.nativeElement.querySelector('.trolado-tabs-header-labels');
 
-        this.labelItem[0].classList.add('active-label');
-
         this.header.nativeElement.style.left = 0;
 
         this.header.nativeElement.style.right = 0;
@@ -100,7 +99,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
         
         if (this.labels.length > 0) {
             if(this.atual == 0) this.atual = null;
-            this.exibir(0, null, this.labelItem[0]);
+            setTimeout(() => this.exibir(0, null, this.labelItem[0]), 400);
         } else {
             this.criarTAB(this.plusLabel.nativeElement);
         }
@@ -173,6 +172,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
         if (item == this.atual || !this.animable) return;
 
         this.animable = false;
+        this.del = true;
 
         this.deactivateLabels(0);
 
@@ -329,11 +329,14 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
     delete(item, index, event) {//DELETA UMA TAB
         event.stopPropagation();
-        setTimeout(() => {
-            item.remove();
-            this.contents[index].remove();
-            this.clear();
-        },400);
+        if(this.del){
+            this.del = false;
+            setTimeout(() => {
+                item.remove();
+                this.contents[index].remove();
+                this.clear();
+            },400);
+        }
     }
 
 
