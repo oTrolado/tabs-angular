@@ -103,7 +103,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
         } else {
             this.criarTAB(this.plusLabel.nativeElement);
         }
-
+        this.del = true;
     }
 
     clear() {//RESETA O HEADER E O BODY
