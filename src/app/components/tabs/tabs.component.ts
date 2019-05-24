@@ -48,7 +48,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
     constructor(
         private view: ElementRef
-    ) { }
+    ) {}
 
 
     ngOnInit() {

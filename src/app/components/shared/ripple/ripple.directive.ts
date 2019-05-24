@@ -19,13 +19,15 @@ export class RippleDirective {
     );
   }
 
+  elemente = this.elementRef
+
 
   @HostListener('mousedown', ['$event']) mouseDown(event){//DISPARA O RIPPLE AO CLIQUE
     let target = event.target;
-    
+
     this.prevent = this.renderer.createElement('div');
     this.renderer.addClass(this.prevent, 'prevent');
-
+    
     this.ripple = this.renderer.createElement('div');
     this.renderer.addClass(this.ripple, 'ripple');
 
@@ -47,23 +49,27 @@ export class RippleDirective {
         this.renderer.setStyle(
             this.ripple, 
             'transform', 
-            'scale('+(this.elementRef.nativeElement.clientWidth*2.4)/12+')');
+            'scale('+(this.elementRef.nativeElement.clientWidth*2.4)/12+')'
+            );
+            return this.elementRef.nativeElement;
 
     } else {
 
         this.renderer.setStyle(
             this.ripple, 
             'transform', 
-            'scale('+(this.elementRef.nativeElement.clientHeight*2.4)/12+')');
+            'scale('+(this.elementRef.nativeElement.clientHeight*2.4)/12+')'
+            );
+            return this.elementRef.nativeElement;
 
     }
 
   }
 
   @HostListener('mouseup',['$event']) mouseUp(event){//REMOVE O RIPPLE AO MOUSE UP
-
+    
     if(event.target.classList.contains('prevent')){
-
+        
       setTimeout(() => {
 
         try{
@@ -84,6 +90,7 @@ export class RippleDirective {
         } catch{/*o ripple ja foi removido*/}
       }, 600);
 
+      return event.target;
     }
 
   }
