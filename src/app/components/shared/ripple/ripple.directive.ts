@@ -72,22 +72,19 @@ export class RippleDirective {
 
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-
-          try{
+            if(event.target.nextSibling){
               this.renderer.setStyle(
                   event.target.nextSibling,
                   'backgroundColor',
                   'transparent'
                   );
-          } catch{/*o ripple ja foi removido*/}
+            }
         }, 200);//RESET
   
         setTimeout(()=>{
   
-          try{
-              event.target.nextSibling.remove();
-              event.target.remove();
-          } catch{reject(event.target);/*o ripple ja foi removido*/}
+          if(event.target.nextSibling)  event.target.nextSibling.remove();
+          if(event.target)  event.target.remove();
           resolve(event.target);
         }, 600);
         
@@ -102,22 +99,20 @@ export class RippleDirective {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
 
-          try{
+          if(event.fromElement.nextSibling){
             this.renderer.setStyle(
                 event.fromElement.nextSibling,
                 'backgroundColor',
                 'transparent'
                 );
-          } catch{/*o ripple ja foi removido*/}
+          }
 
         },200);//RESET
 
         setTimeout(()=>{
 
-          try {
-            event.target.nextSibling.remove();
-            event.target.remove();
-          } catch{reject(event.target);/*o ripple ja foi removido*/}
+          if(event.target.nextSibling)  event.target.nextSibling.remove();
+          if(event.target)  event.target.remove();
           resolve(event.target);
         }, 600);
         
