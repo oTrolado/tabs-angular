@@ -86,7 +86,7 @@ describe('RippleDirective', () => {
     expect(testElement.querySelectorAll('.ripple').length).toBeGreaterThanOrEqual(1);
   });
 
-  it('should delete ripple inside element onMouseUp', () => {
+  it('should delete ripple inside element onMouseUp', (done: DoneFn) => {
     let down = new MouseEvent('mouseDown');
     let up = new MouseEvent('mouseup');
 
@@ -97,14 +97,25 @@ describe('RippleDirective', () => {
     testElement.dispatchEvent(down);
 
     testElement.querySelector('.prevent').addEventListener('mouseup', (event) => {
-      let ret = directive.mouseUp(event);
-      expect(ret).toBe(event.target);
+      directive.mouseUp(event)
+      .then( result => {
+
+        expect(result).toBe(null);
+        done();
+
+      }).catch(e => {
+
+        expect(e).toBe(null);
+        done();
+
+      });
+    
     });
     testElement.querySelector('.prevent').dispatchEvent(up);
     
   });
 
-  it('should delete ripple inside element onMouseOut', () => {
+  it('should delete ripple inside element onMouseOut', (done: DoneFn) => {
     let down = new MouseEvent('mouseDown');
     let out = new MouseEvent('mouseout');
 
@@ -115,9 +126,20 @@ describe('RippleDirective', () => {
     testElement.dispatchEvent(down);
 
     testElement.querySelector('.prevent').addEventListener('mouseout', (event) => {
-      let ret = directive.mouseUp(event);
-      expect(ret).toBe(event.target);
+      directive.mouseOut(event)
+      .then( result => {
+
+        expect(result).toBe(null);
+        done();
+
+      }).catch( e => {
+
+        expect(e).toBe(null);
+        done();
+
+      });
     });
+
     testElement.querySelector('.prevent').dispatchEvent(out);
     
   });

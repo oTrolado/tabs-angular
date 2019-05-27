@@ -69,36 +69,38 @@ export class RippleDirective {
   @HostListener('mouseup',['$event']) mouseUp(event){//REMOVE O RIPPLE AO MOUSE UP
     
     if(event.target.classList.contains('prevent')){
+
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+
+          try{
+              this.renderer.setStyle(
+                  event.target.nextSibling,
+                  'backgroundColor',
+                  'transparent'
+                  );
+          } catch{/*o ripple ja foi removido*/}
+        }, 200);//RESET
+  
+        setTimeout(()=>{
+  
+          try{
+              event.target.nextSibling.remove();
+              event.target.remove();
+          } catch{reject(event.target);/*o ripple ja foi removido*/}
+          resolve(event.target);
+        }, 600);
         
-      setTimeout(() => {
-
-        try{
-            this.renderer.setStyle(
-                event.target.nextSibling,
-                'backgroundColor',
-                'transparent'
-                );
-        } catch{/*o ripple ja foi removido*/}
-
-      }, 200);//RESET
-
-      setTimeout(()=>{
-
-        try{
-            event.target.nextSibling.remove();
-            event.target.remove();
-        } catch{/*o ripple ja foi removido*/}
-      }, 600);
-
-      return event.target;
+      }); 
     }
-
   }
 
   @HostListener('mouseout',['$event']) mouseOut(event){//REMOVE O RIPPLE AO MOUSE OUT
-    if(event.fromElement.classList.contains('prevent')){
 
-      setTimeout(() => {
+    if(event.fromElement.classList.contains('prevent')){
+     
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
 
           try{
             this.renderer.setStyle(
@@ -115,10 +117,11 @@ export class RippleDirective {
           try {
             event.target.nextSibling.remove();
             event.target.remove();
-          } catch{/*o ripple ja foi removido*/}
-
+          } catch{reject(event.target);/*o ripple ja foi removido*/}
+          resolve(event.target);
         }, 600);
-
+        
+      });
     }
   }
 
