@@ -19,7 +19,6 @@ export class RippleDirective {
     );
   }
 
-  elemente = this.elementRef
 
 
   @HostListener('mousedown', ['$event']) mouseDown(event){//DISPARA O RIPPLE AO CLIQUE
@@ -72,7 +71,7 @@ export class RippleDirective {
 
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-            if(event.target.nextSibling){
+            if(event.target ? event.target.nextSibling : false){
               this.renderer.setStyle(
                   event.target.nextSibling,
                   'backgroundColor',
@@ -83,8 +82,10 @@ export class RippleDirective {
   
         setTimeout(()=>{
   
-          if(event.target.nextSibling)  event.target.nextSibling.remove();
-          if(event.target)  event.target.remove();
+          if(event.target){
+            if(event.target.nextSibling) event.target.nextSibling.remove();
+            event.target.remove();
+          }
           resolve(event.target);
         }, 600);
         
@@ -99,7 +100,7 @@ export class RippleDirective {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
 
-          if(event.fromElement.nextSibling){
+          if(event.fromElement ? event.fromElement.nextSibling : false){
             this.renderer.setStyle(
                 event.fromElement.nextSibling,
                 'backgroundColor',
@@ -110,9 +111,10 @@ export class RippleDirective {
         },200);//RESET
 
         setTimeout(()=>{
-
-          if(event.target.nextSibling)  event.target.nextSibling.remove();
-          if(event.target)  event.target.remove();
+          if(event.target){
+            if(event.target.nextSibling) event.target.nextSibling.remove();
+            event.target.remove();
+          }
           resolve(event.target);
         }, 600);
         
