@@ -42,26 +42,16 @@ export class RippleDirective {
 
     this.renderer.setStyle(this.ripple, 'left', (event.layerX)+"px");
 
-    
-    if(target.clientWidth >= target.clientHeight){	
-        
-        this.renderer.setStyle(
-            this.ripple, 
-            'transform', 
-            'scale('+(this.elementRef.nativeElement.clientWidth*2.4)/12+')'
-            );
-            return this.elementRef.nativeElement;
-
-    } else {
-
-        this.renderer.setStyle(
-            this.ripple, 
-            'transform', 
-            'scale('+(this.elementRef.nativeElement.clientHeight*2.4)/12+')'
-            );
-            return this.elementRef.nativeElement;
-
-    }
+    const height = this.elementRef.nativeElement.clientHeight;  
+    const width = this.elementRef.nativeElement.clientWidth;
+    const size = Math.sqrt(height**2 + width**2); 
+    console.log(height + ' ' + width + ' ' + (size));
+    this.renderer.setStyle(
+        this.ripple, 
+        'transform', 
+        'scale('+(size)/5.5+')'
+        );
+        return this.elementRef.nativeElement;
 
   }
 
@@ -69,7 +59,7 @@ export class RippleDirective {
     
     if(event.target.classList.contains('prevent')){
 
-      return new Promise((resolve, reject) => {
+      return new Promise( resolve => {
         setTimeout(() => {
             if(event.target ? event.target.nextSibling : false){
               this.renderer.setStyle(
