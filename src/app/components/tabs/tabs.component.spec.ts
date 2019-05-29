@@ -117,4 +117,23 @@ describe('TabsComponent', () => {
     });
 
   });
+
+  it('should delete a tab', (done:DoneFn) => {
+
+    const event:Event = new Event('click');
+    const obj:number = Math.floor(Math.random() * (contentMock.length - 0));
+
+    component.del = true;
+
+    component.delete(obj, event)
+    .then( ret => {
+      expect(ret).toBe(contentMock[obj]);
+      done();
+    })
+    .catch(e =>{
+      console.error(e);
+      done();
+    });
+
+  });
 });

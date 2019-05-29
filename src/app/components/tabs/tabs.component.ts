@@ -107,6 +107,7 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
             this.criarTAB(this.plusLabel.nativeElement);
         }
         this.del = true;
+        
     }
 
     clear() {//RESETA O HEADER E O BODY
@@ -340,15 +341,21 @@ export class TabsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     }
 
 
-    delete(item, index, event) {//DELETA UMA TAB
+    delete(index, event) {//DELETA UMA TAB
         event.stopPropagation();
-        if(this.del){
-            this.del = false;
-            setTimeout(() => {
-                this.contents[index].remove();
-                this.clear();
-            },400);
-        }
+        return new Promise(resolve => {
+            if(this.del){
+                this.del = false;
+                
+                setTimeout(() => {
+                    let i:any = this.contents[index]; 
+                    this.contents[index].remove();
+                    resolve(i);
+                    this.clear();                    
+                },400);
+                
+            }
+        });
     }
 
 
